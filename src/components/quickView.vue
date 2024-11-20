@@ -121,7 +121,6 @@ export default {
             this.$emit('wishlist', { id: this.id, wishlist: !this.isInWishlist });
         },
         handleClickOutside(event) {
-            // Проверяем, был ли клик вне содержимого
             const content = this.$el.querySelector('.content');
             if (content && !content.contains(event.target)) {
                 this.closePopup();
