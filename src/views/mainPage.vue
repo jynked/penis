@@ -19,7 +19,7 @@
                     <a href="/shop">В МАГАЗИН <img src="../assets/img/buttonLink.jpg" alt=""></a>
                 </div>
             </div>
-            <div class="favourites-container" id="favourites-container">
+            <div class="favourites-container" id="favourites">
                 <p>ЛЮБИМОЕ</p>
                 <div class="heading">
                     <span></span>
@@ -35,14 +35,14 @@
                         @wishlist="updateWishlist" />
                 </div>
                 <div class="buttons-visible">
-                    <button v-if="visibleCountBestsellers > 8" @click="loadLessBestsellers" class="load-less">Hide
-                        everything</button>
+                    <a href="#favourites" v-if="visibleCountBestsellers > 8" @click="loadLessBestsellers" class="load-less">Hide
+                        everything</a>
                     <button v-if="catalog.length > visibleCountBestsellers" @click="loadMoreBestsellers"
                         class="load-more">Load
                         more</button>
                 </div>
             </div>
-            <div class="popular-container" id="popular-container">
+            <div class="popular-container" id="popular">
                 <div class="heading">
                     <span></span>
                     <p>Популярные</p>
@@ -57,7 +57,7 @@
                         @wishlist="updateWishlist" />
                 </div>
                 <div class="buttons-visible">
-                    <a href="#popular-container" v-if="visibleCountPopular > 8" @click="loadLessPopular" class="load-less">Hide
+                    <a href="#popular" v-if="visibleCountPopular > 8" @click="loadLessPopular" class="load-less">Hide
                         everything</a>
                     <button v-if="catalog.length > visibleCountPopular" @click="loadMorePopular" class="load-more">Load
                         more</button>
@@ -69,7 +69,7 @@
                     <a href="/shop">ПЕРЕЙТИ<img src="../assets/img/buttonLink.jpg" alt=""></a>
                 </div>
             </div>
-            <div class="catalog-container" id="catalog-container">
+            <div class="catalog-container" id="catalog">
                 <div class="heading">
                     <p>Все товары</p>
                 </div>
@@ -82,7 +82,7 @@
                         @wishlist="updateWishlist" />
                 </div>
                 <div class="buttons-visible">
-                    <a href="#catalog-container" v-if="visibleCountCatalog > 8" @click="loadLessCatalog" class="load-less">Hide
+                    <a href="#catalog" v-if="visibleCountCatalog > 8" @click="loadLessCatalog" class="load-less">Hide
                         everything</a>
                     <button v-if="catalog.length > visibleCountCatalog" @click="loadMoreCatalog" class="load-more">Load
                         more</button>

@@ -34,11 +34,11 @@
                         </div>
                         <a href="#" class="buy-now"><img src="../assets/img/cart.png" alt="">BUY NOW</a>
                         <div class="add-wishlist" v-if="!wishlist">
-                            <button @click="wishlistToggle"><img src="../assets/img/not-favourite.png" alt=""></button>
+                            <button @click.stop="wishlistToggle"><img src="../assets/img/not-favourite.png" alt=""></button>
                             Add to wishlist
                         </div>
-                        <a @click="wishlistToggle" class="browse-wishlist" v-if="wishlist">
-                            <img src="../assets/img/favourite.png" alt="" style="width: 20px; height: auto; margin: 0px">
+                        <a class="browse-wishlist" href="#" v-if="wishlist">
+                            <img src="../assets/img/favourite.png" alt="" style="width: 20px; height: auto; margin-left: 4px">
                             Browse wishlist
                         </a>
                         <div class="article">
@@ -117,11 +117,20 @@ export default {
         closePopup() {
             this.$emit('close-popup');
         },
-        wishlistToggle() {
-            this.$emit('wishlist', { id: this.id, wishlist: !this.isInWishlist });
+        wishlistToggle(event) {
+            event.stopPropagation();
+            this.$emit('wishlist', { id: this.id, wishlist: !this.wishlist });
         },
         handleClickOutside(event) {
             const content = this.$el.querySelector('.content');
+            const wishlistButton = this.$el.querySelector('.add-wishlist button');
+            const browseWishlist = this.$el.querySelector('.browse-wishlist');
+            
+            if (wishlistButton && wishlistButton.contains(event.target) || 
+                browseWishlist && browseWishlist.contains(event.target)) {
+                return;
+            }
+            
             if (content && !content.contains(event.target)) {
                 this.closePopup();
             }
