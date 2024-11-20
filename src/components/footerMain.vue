@@ -13,12 +13,11 @@
             </div>
             <div class="component">
                 <p class="heading">Покупателям</p>
-                <a href="/faq">Связаться с нами</a>
-                <a href="/faq">Как сделать заказ?</a>
-                <a href="/faq">Как оплатить?</a>
-                <a href="/faq">Доставка</a>
-                <a href="/faq">Возврат</a>
-                <a href="/faq">Вопрос-ответ</a>
+                <router-link :to="{ name: 'faq', query: { section: 'howOrder' }}">Как сделать заказ?</router-link>
+                <router-link :to="{ name: 'faq', query: { section: 'howPay' }}">Как оплатить?</router-link>
+                <router-link :to="{ name: 'faq', query: { section: 'howDeliver' }}">Доставка</router-link>
+                <router-link :to="{ name: 'faq', query: { section: 'howReturnItem' }}">Возврат</router-link>
+                <router-link :to="{ name: 'faq', query: { section: 'whereConsultation' }}">Вопрос-ответ</router-link>
             </div>
             <div class="component">
                 <a href="#">Соглашение о конфиденциальности</a>

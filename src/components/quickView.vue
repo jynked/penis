@@ -34,11 +34,13 @@
                         </div>
                         <a href="#" class="buy-now"><img src="../assets/img/cart.png" alt="">BUY NOW</a>
                         <div class="add-wishlist" v-if="!wishlist">
-                            <button @click.stop="wishlistToggle"><img src="../assets/img/not-favourite.png" alt=""></button>
+                            <button @click.stop="wishlistToggle"><img src="../assets/img/not-favourite.png"
+                                    alt=""></button>
                             Add to wishlist
                         </div>
                         <a class="browse-wishlist" href="#" v-if="wishlist">
-                            <img src="../assets/img/favourite.png" alt="" style="width: 20px; height: auto; margin-left: 4px">
+                            <img src="../assets/img/favourite.png" alt=""
+                                style="width: 20px; height: auto; margin-left: 4px">
                             Browse wishlist
                         </a>
                         <div class="article">
@@ -63,9 +65,11 @@
                         </button>
                         <div class="collapse" :id="id">
                             <div class="card card-body">
-                                <div data-bs-toggle="collapse" :data-bs-target="'#' + id">
+                                <div>
                                     <p>{{ detail }}</p>
-                                    <a href="/dfgfdsgsdgs" style="color: #000;">Learn more</a>
+                                    <router-link to="/log" style="color: #000;" @click.stop>
+                                        Learn more
+                                    </router-link>
                                 </div>
                             </div>
                         </div>
@@ -125,12 +129,12 @@ export default {
             const content = this.$el.querySelector('.content');
             const wishlistButton = this.$el.querySelector('.add-wishlist button');
             const browseWishlist = this.$el.querySelector('.browse-wishlist');
-            
-            if (wishlistButton && wishlistButton.contains(event.target) || 
+
+            if (wishlistButton && wishlistButton.contains(event.target) ||
                 browseWishlist && browseWishlist.contains(event.target)) {
                 return;
             }
-            
+
             if (content && !content.contains(event.target)) {
                 this.closePopup();
             }

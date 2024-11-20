@@ -19,7 +19,6 @@ const routes = [
     name: 'faq',
     component: FAQ,
   },
-  // Добавим обработку 404
   {
     path: '/:pathMatch(.*)*',
     redirect: '/'
@@ -27,9 +26,14 @@ const routes = [
 ]
 
 const router = createRouter({
-  // Уберем process.env.BASE_URL, так как это может вызывать проблемы
   history: createWebHistory(),
-  routes
+  routes,
+  scrollBehavior(to, from, savedPosition) {
+    if (savedPosition) {
+      return savedPosition
+    }
+    return { top: 0 }
+  }
 })
 
 export default router
