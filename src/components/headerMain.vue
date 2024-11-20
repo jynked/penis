@@ -43,7 +43,7 @@
                 </div>
             </div>
             <div class="social-media">
-                <a href="/faq">Вопрос-ответ</a>
+                <router-link to="/faq">FAQ</router-link>
                 <a href="https://www.facebook.com/harvunity">
                     <img src="../assets/img/facebook.png" alt="">
                 </a>
