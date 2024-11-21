@@ -1,9 +1,13 @@
 import { createApp } from 'vue';
 import App from './App.vue';
 import router from './router';
-import store from './store/store'; // Импортируем store
+import store from './store/store';
 
 const app = createApp(App);
-app.use(router); // Подключаем роутер
-app.use(store); // Подключаем Vuex Store
+
+// Регистрируем глобальные компоненты, если они есть
+app.use(router);
+app.use(store);
+
+// Монтируем приложение
 app.mount('#app');

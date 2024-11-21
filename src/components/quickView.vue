@@ -1,9 +1,9 @@
 <template>
     <div class="quick-view" @click="handleClickOutside">
         <div class="container">
-            <div class="main">
+            <div class="main-product" v-if="viewType === 'product'" style="display: block;">
                 <button class="back" @click="closePopup"><img src="../assets/img/close.png" alt=""></button>
-                <div class="content">
+                <div class="content" @click.stop>
                     <div class="fruit-image">
                         <img :src="image" alt="">
                     </div>
@@ -38,11 +38,14 @@
                                     alt=""></button>
                             Add to wishlist
                         </div>
-                        <a class="browse-wishlist" href="#" v-if="wishlist">
-                            <img src="../assets/img/favourite.png" alt=""
-                                style="width: 20px; height: auto; margin-left: 4px">
-                            Browse wishlist
-                        </a>
+                        <div class="browse-wishlist" v-if="wishlist">
+                            <button>
+                                <img src="../assets/img/favourite.png" alt=""
+                                    style="width: 20px; height: auto; margin-left: 4px; margin-right: 4px;"
+                                    @click.stop="wishlistToggle">
+                            </button>
+                            <a href="#">Browse wishlist</a>
+                        </div>
                         <div class="article">
                             <p>SKU:&#160;</p>
                             <p id="article">{{ article }}</p>
@@ -76,32 +79,146 @@
                     </div>
                 </div>
             </div>
+            <div class="main-log" v-if="viewType === 'login'" style="display: block;">
+                <button class="back" @click="closePopup"><img src="../assets/img/close.png" alt=""></button>
+                <div class="content" @click.stop>
+                    <div class="title">
+                        <img src="../assets/img/inst.png" alt="">
+                        <p>MY ACCOUNT</p>
+                    </div>
+                    <div class="log-and-reg">
+                        <div class="log-buttons">
+                            <button @click="showLogin" :class="{ active: isLogin }">LOGIN</button>
+                            <button @click="showRegister" :class="{ active: !isLogin }">REGISTER</button>
+                        </div>
+                        <form id="login-form" v-if="isLogin === true">
+                            <div class="data">
+                                <p>Username or email address *</p>
+                                <input type="text" name="email-log" id="email-log" required>
+                            </div>
+                            <div class="data">
+                                <p>Password *</p>
+                                <input type="password" name="password-log" id="password-log" required>
+                            </div>
+                            <div class="remember-forget">
+                                <div class="remember">
+                                    <input type="checkbox" id="remember" name="remember">
+                                    <label for="remember">Remember me</label>
+                                </div>
+                                <a href="#">Lost your password?</a>
+                            </div>
+                            <button type="submit">LOG IN</button>
+                        </form>
+                        <form id="register-form"  v-if="isLogin === false">
+                            <div class="data">
+                                <p>Email address *</p>
+                                <input type="email" name="email-reg" id="email-reg" required>
+                            </div>
+                            <div class="data">
+                                <p>Password *</p>
+                                <input type="password" name="password" id="password" required>
+                            </div>
+                            <div class="for-seller" v-if="role === 'seller'">
+                                <div class="data-block">
+                                    <div class="data">
+                                        <p>Имя *</p>
+                                        <input type="text" name="name" id="name" required>
+                                    </div>
+                                    <div class="data">
+                                        <p>Фамилия *</p>
+                                        <input type="text" name="lastname" id="lastname" required>
+                                    </div>
+                                </div>
+                                <div class="data">
+                                    <p>Название магазина *</p>
+                                    <input type="text" name="shop-name" id="shop-name" required>
+                                </div>
+                                <div class="data">
+                                    <p>URL магазина *</p>
+                                    <input type="text" name="shop-url" id="shop-url" required>
+                                    <p class="url">https://harvunity.com/store/</p>
+                                </div>
+                                <div class="data-block">
+                                    <div class="data">
+                                        <p>Company Name</p>
+                                        <input type="text" name="company-name" id="company-name" required>
+                                    </div>
+                                    <div class="data">
+                                        <p>Name of Bank</p>
+                                        <input type="text" name="bank" id="bank" required>
+                                    </div>
+                                </div>
+                                <div class="data">
+                                    <p>Номер телефона *</p>
+                                    <input type="tel" name="number" id="number" required>
+                                </div>
+                            </div>
+                            <div class="who-are-you">
+                                <div class="person">
+                                    <input type="radio" name="role" id="client" value="client" v-model="role" required
+                                        checked>
+                                    <label for="client">
+                                        <p>Я покупатель</p>
+                                    </label>
+                                </div>
+                                <div class="person">
+                                    <input type="radio" name="role" id="seller" value="seller" v-model="role" required>
+                                    <label for="seller">
+                                        <p>Я продавец</p>
+                                    </label>
+                                </div>
+                            </div>
+                            <p class="private-policy">Ваши личные данные будут использоваться для упрощения вашего
+                                дальнейшего
+                                взаимодействия с сайтом,
+                                управления доступом к вашему аккаунту и других целей, описанных в документе
+                                <a href="#">privacy policy</a>.
+                            </p>
+                            <button type="submit">REGISTER</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 </template>
 
 <script>
 export default {
+    emits: ['update-quantity', 'close-popup', 'wishlist'],
     props: {
-        image: { type: String, required: true },
-        name: { type: String, required: true },
-        starsProduct: { type: Number, required: true },
-        price: { type: Number, required: true },
-        quantity: { type: Number, default: 1 },
-        maxItems: { type: Number, required: true },
-        reviews: { type: Number, required: true },
-        sellerStars: { type: Number, required: true },
-        article: { type: String, required: true },
-        id: { type: Number, required: true },
-        detail: { type: String, required: true },
-        wishlist: { type: Boolean, required: true },
+        image: { type: String, required: false, default: '' },
+        name: { type: String, required: false, default: '' },
+        starsProduct: { type: Number, required: false, default: 0 },
+        price: { type: Number, required: false, default: 0 },
+        quantity: { type: Number, required: false, default: 1 },
+        maxItems: { type: Number, required: false, default: 0 },
+        reviews: { type: Number, required: false, default: 0 },
+        sellerStars: { type: Number, required: false, default: 0 },
+        article: { type: String, required: false, default: '' },
+        id: { type: Number, required: false, default: 0 },
+        detail: { type: String, required: false, default: '' },
+        wishlist: { type: Boolean, required: false, default: false },
+        viewType: {
+            type: String,
+            required: true,
+            validator: value => ['product', 'login'].includes(value)
+        },
     },
     data() {
         return {
+            isLogin: true,
+            role: 'client',
             localQuantity: this.quantity,
         };
     },
     methods: {
+        showLogin() {
+            this.isLogin = true;
+        },
+        showRegister() {
+            this.isLogin = false;
+        },
         increaseQuantity() {
             if (this.localQuantity < this.maxItems) {
                 this.localQuantity++;
@@ -127,14 +244,6 @@ export default {
         },
         handleClickOutside(event) {
             const content = this.$el.querySelector('.content');
-            const wishlistButton = this.$el.querySelector('.add-wishlist button');
-            const browseWishlist = this.$el.querySelector('.browse-wishlist');
-
-            if (wishlistButton && wishlistButton.contains(event.target) ||
-                browseWishlist && browseWishlist.contains(event.target)) {
-                return;
-            }
-
             if (content && !content.contains(event.target)) {
                 this.closePopup();
             }
@@ -152,6 +261,6 @@ export default {
         quantity(newQuantity) {
             this.localQuantity = newQuantity;
         }
-    }
+    },
 }
 </script>

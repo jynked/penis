@@ -3,16 +3,16 @@
         <div class="header-top">
             <div class="locale">
                 <select name="currency" id="currency">
-                    <option value="rub">RUB</option>
-                    <option value="usd">USD</option>
-                    <option value="eur">EUR</option>
-                    <option value="amd">AMD</option>
+                    <option value="RUB">RUB</option>
+                    <option value="USD">USD</option>
+                    <option value="EUR">EUR</option>
+                    <option value="AMD">AMD</option>
                 </select>
                 <span></span>
                 <select id="language">
-                    <option value="rus">Russian</option>
-                    <option value="arm">Armenian</option>
-                    <option value="eng">English</option>
+                    <option value="ru">Russian</option>
+                    <option value="en">English</option>
+                    <option value="am">Armenian</option>
                 </select>
 
                 <span></span>
@@ -56,7 +56,7 @@
             </div>
         </div>
         <div :class="['header-main', { 'fixed': isFixed }]">
-            <div class="container">
+            <div class="container container-land">
                 <div class="shop">
                     <a href="/">
                         <img src="../assets/img/logo.png" alt="">
@@ -76,7 +76,7 @@
                     <button><img src="../assets/img/loop.png" alt=""></button>
                 </div>
                 <div class="user-logs">
-                    <button class="log">
+                    <button class="log" @click="openLoginPopup">
                         <img src="../assets/img/inst.png" alt="">
                         <p>ВОЙТИ</p>
                     </button>
@@ -94,14 +94,36 @@
                     </button>
                 </div>
             </div>
+            <div class="search mobile">
+                    <input type="text" name="search" id="search" placeholder="Search for...">
+                    <button><img src="../assets/img/loop.png" alt=""></button>
+            </div>
+            <div class="container mobile">
+                <button>
+                    <img src="../assets/img/headerMenu.png" alt="">
+                </button>
+                <a href="/">
+                    <img src="../assets/img/logo.png" alt="">
+                </a>
+                <button>
+                    <img src="../assets/img/headerCart.png" alt="">
+                </button>
+            </div>
         </div>
     </header>
+    <QuickView v-if="showLoginPopup" 
+        :view-type="'login'"
+        @close-popup="showLoginPopup = false" />
 </template>
 
 <script>
 import { ref, computed, onMounted, onBeforeUnmount } from 'vue';
+import QuickView from './quickView.vue';
 
 export default {
+    components: {
+        QuickView
+    },
     setup() {
         const isDropdownOpen = ref(false);
         const citySearch = ref('');
@@ -168,6 +190,16 @@ export default {
             continueWithoutCity,
             isFixed
         };
-    }
+    },
+    data() {
+        return {
+            showLoginPopup: false
+        }
+    },
+    methods: {
+        openLoginPopup() {
+            this.showLoginPopup = true;
+        }
+    },
 }
 </script>
