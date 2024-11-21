@@ -81,7 +81,7 @@
                 <a href="/">
                     <router-link :to="{ name: 'main' }"><img src="../assets/img/logo.png" alt=""></router-link>
                 </a>
-                <button>
+                <button @click="openCartPopup">
                     <img src="../assets/img/headerCart.png" alt="">
                 </button>
             </div>
