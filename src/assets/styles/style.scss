@@ -2151,7 +2151,7 @@ header {
 
                 p {
                     position: absolute;
-                    display: flex;
+                    display: flex !important;
                     align-items: center;
                     justify-content: center;
                     right: 0px;
@@ -2206,7 +2206,7 @@ header {
                         color: #FFF;
                         border-radius: 30px;
                         font-size: 8px;
-                        display: flex;
+                        display: flex !important;
                         align-items: center;
                         justify-content: center;
                         width: 20px;
