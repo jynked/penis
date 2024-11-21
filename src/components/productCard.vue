@@ -21,10 +21,11 @@
             <button @click="decreaseQuantity">-</button>
             <input type="number" v-model="localQuantity" min="1" :max="maxItems" @input="checkQuantity">
             <button @click="increaseQuantity">+</button>
-            <button class="add-to-cart">
-                <img src="../assets/img/cart.png" alt="">
+            <button class="add-to-cart" @click="addToCart">
+                buy
             </button>
         </div>
+        <p v-if="cartError" class="cart-error">{{ cartError }}</p>
 
         <QuickView v-if="showProductPopup"
             :view-type="'product'"
@@ -91,7 +92,8 @@ export default {
     data() {
         return {
             showProductPopup: false,
-            localQuantity: 1
+            localQuantity: 1,
+            cartError: null
         };
     },
     computed: {
@@ -144,6 +146,24 @@ export default {
         },
         wishlistToggle() {
             this.$emit('wishlist', { id: this.id, wishlist: !this.isInWishlist });
+        },
+        async addToCart() {
+            const result = await this.$store.dispatch('addToCart', {
+                product: {
+                    id: this.id,
+                    name: this.name,
+                    price: this.price,
+                    image: this.image
+                },
+                quantity: this.localQuantity
+            });
+            
+            if (result.error) {
+                this.cartError = result.error;
+                setTimeout(() => {
+                    this.cartError = null;
+                }, 3000); // Сообщение исчезнет через 3 секунды
+            }
         }
     }
 };

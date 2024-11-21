@@ -33,12 +33,12 @@
                             <span></span>
                         </div>
                         <a href="#" class="buy-now"><img src="../assets/img/cart.png" alt="">BUY NOW</a>
-                        <div class="add-wishlist" v-if="!wishlist">
+                        <div class="add-wishlist" v-if="!isInWishlist">
                             <button @click.stop="wishlistToggle"><img src="../assets/img/not-favourite.png"
                                     alt=""></button>
                             Add to wishlist
                         </div>
-                        <div class="browse-wishlist" v-if="wishlist">
+                        <div class="browse-wishlist" v-if="isInWishlist">
                             <button>
                                 <img src="../assets/img/favourite.png" alt=""
                                     style="width: 20px; height: auto; margin-left: 4px; margin-right: 4px;"
@@ -109,7 +109,7 @@
                             </div>
                             <button type="submit">LOG IN</button>
                         </form>
-                        <form id="register-form"  v-if="isLogin === false">
+                        <form id="register-form" v-if="isLogin === false">
                             <div class="data">
                                 <p>Email address *</p>
                                 <input type="email" name="email-reg" id="email-reg" required>
@@ -179,11 +179,94 @@
                     </div>
                 </div>
             </div>
+            <div class="main-favourites" v-if="viewType === 'favourites'">
+                <button class="back" @click="closePopup"><img src="../assets/img/close.png" alt=""></button>
+                <div class="content" @click.stop>
+                    <div class="heading">
+                        <div class="heart-counter">
+                            <img src="../assets/img/favourite.png" alt="">
+                            <p>{{ wishlist.length }}</p>
+                        </div>
+                        <p>MY WISHLIST</p>
+                    </div>
+                    <div class="catalog">
+                        <div v-if="wishlist.length === 0" class="empty-wishlist">
+                            <p>Список избранного пуст</p>
+                        </div>
+                        <div v-else class="wishlist-items">
+                            <div v-for="item in wishlist" 
+                                 :key="item.id" 
+                                 class="product">
+                                <img :src="require(`@/assets/img/${item.image}`)" :alt="item.name">
+                                <div class="info">
+                                    <p>{{ item.name }}</p>
+                                    <p>1 x {{ item.price }}₽</p>
+                                </div>
+                                <button class="remove-wishlist" @click="removeFromWishlist(item)">
+                                    <img src="../assets/img/close.png" alt="Remove">
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="main-cart" v-if="viewType === 'cart'">
+                <button class="back" @click="closePopup"><img src="../assets/img/close.png" alt=""></button>
+                <div class="content" @click.stop>
+                    <div class="heading">
+                        <div class="cart-counter">
+                            <img src="../assets/img/cart.png" alt="">
+                            <p>{{ cartItemsCount }}</p>
+                        </div>
+                        <p>MY CART</p>
+                    </div>
+                    <div class="catalog">
+                        <div v-if="cart.length === 0" class="empty-cart">
+                            <p>Корзина пуста</p>
+                        </div>
+                        <div v-else class="cart-items">
+                            <div v-for="item in cart" 
+                                 :key="item.id" 
+                                 class="product">
+                                <img :src="require(`@/assets/img/${item.image}`)" :alt="item.name">
+                                <div class="info">
+                                    <p>{{ item.name }}</p>
+                                    <p>{{ item.quantity }} x {{ item.price }}₽</p>
+                                    <p class="total">Итого: {{ item.quantity * item.price }}₽</p>
+                                </div>
+                                <div class="action-buttons">
+                                    <div v-if="isItemInWishlist(item.id)" class="browse-wishlist">
+                                        <button @click="toggleItemWishlist(item)">
+                                            <img src="../assets/img/favourite.png" alt=""
+                                                style="width: 20px; height: auto;">
+                                        </button>
+                                    </div>
+                                    <div v-else class="add-wishlist">
+                                        <button @click="toggleItemWishlist(item)">
+                                            <img src="../assets/img/not-favourite.png" alt=""
+                                                style="width: 30px; height: auto; margin-right: -5px">
+                                        </button>
+                                    </div>
+                                    <button class="remove-cart" @click="removeFromCart(item.id)">
+                                        <img src="../assets/img/close.png" alt="Remove">
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="cart-total" v-if="cart.length > 0">
+                            <p>Общая сумма: {{ cartTotal }}₽</p>
+                            <button class="checkout">ОФОРМИТЬ ЗАКАЗ</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 </template>
 
 <script>
+import { mapState, mapGetters } from 'vuex';
+
 export default {
     emits: ['update-quantity', 'close-popup', 'wishlist'],
     props: {
@@ -198,11 +281,10 @@ export default {
         article: { type: String, required: false, default: '' },
         id: { type: Number, required: false, default: 0 },
         detail: { type: String, required: false, default: '' },
-        wishlist: { type: Boolean, required: false, default: false },
         viewType: {
             type: String,
             required: true,
-            validator: value => ['product', 'login'].includes(value)
+            validator: value => ['product', 'login', 'favourites'].includes(value)
         },
     },
     data() {
@@ -240,7 +322,7 @@ export default {
         },
         wishlistToggle(event) {
             event.stopPropagation();
-            this.$emit('wishlist', { id: this.id, wishlist: !this.wishlist });
+            this.$emit('wishlist', { id: this.id, wishlist: !this.isInWishlist });
         },
         handleClickOutside(event) {
             const content = this.$el.querySelector('.content');
@@ -248,14 +330,31 @@ export default {
                 this.closePopup();
             }
         },
+        removeFromWishlist(item) {
+            this.$store.dispatch('toggleWishlist', item);
+        },
+        removeFromCart(productId) {
+            this.$store.dispatch('removeFromCart', productId);
+        },
+        isItemInWishlist(itemId) {
+            return this.wishlist.some(item => item.id === itemId);
+        },
+        toggleItemWishlist(item) {
+            this.$store.dispatch('toggleWishlist', item);
+        }
     },
     computed: {
+        ...mapState(['wishlist', 'cart']),
+        ...mapGetters(['cartTotal', 'cartItemsCount']),
         starArraySeller() {
             return Array.from({ length: this.sellerStars }, (_, i) => i + 1);
         },
         starArrayProduct() {
             return Array.from({ length: this.starsProduct }, (_, j) => j + 1);
         },
+        isInWishlist() {
+            return this.wishlist.some(item => item.id === this.id);
+        }
     },
     watch: {
         quantity(newQuantity) {

@@ -3,6 +3,7 @@ import { createStore } from 'vuex';
 export default createStore({
     state: {
         wishlist: [],
+        cart: [],
         showQuickView: false,
         quickViewContent: null,
     },
@@ -14,6 +15,7 @@ export default createStore({
             } else {
                 state.wishlist.splice(index, 1);
             }
+            localStorage.setItem('wishlist', JSON.stringify(state.wishlist));
         },
         setWishlist(state, wishlist) {
             state.wishlist = wishlist;
@@ -25,6 +27,32 @@ export default createStore({
         CLOSE_QUICK_VIEW(state) {
             state.showQuickView = false;
             state.quickViewContent = null;
+        },
+        ADD_TO_CART(state, { product, quantity }) {
+            const existingItem = state.cart.find(item => item.id === product.id);
+            if (existingItem) {
+                existingItem.quantity += quantity;
+            } else {
+                state.cart.push({
+                    ...product,
+                    quantity: quantity
+                });
+            }
+            localStorage.setItem('cart', JSON.stringify(state.cart));
+        },
+        REMOVE_FROM_CART(state, productId) {
+            state.cart = state.cart.filter(item => item.id !== productId);
+            localStorage.setItem('cart', JSON.stringify(state.cart));
+        },
+        SET_CART(state, cart) {
+            state.cart = cart;
+        },
+        UPDATE_CART_QUANTITY(state, { productId, quantity }) {
+            const item = state.cart.find(item => item.id === productId);
+            if (item) {
+                item.quantity = quantity;
+                localStorage.setItem('cart', JSON.stringify(state.cart));
+            }
         }
     },
     actions: {
@@ -37,13 +65,41 @@ export default createStore({
         },
         saveWishlist({ state }) {
             localStorage.setItem('wishlist', JSON.stringify(state.wishlist));
-            console.log('Wishlist saved:', state.wishlist); // Вывод состояния wishlist
         },
         openQuickView({ commit }, content) {
             commit('OPEN_QUICK_VIEW', content);
         },
         closeQuickView({ commit }) {
             commit('CLOSE_QUICK_VIEW');
+        },
+        addToCart({ state, commit }, { product, quantity }) {
+            const existingItem = state.cart.find(item => item.id === product.id);
+            if (existingItem) {
+                return { error: 'Товар уже в корзине' };
+            } else {
+                commit('ADD_TO_CART', { product, quantity });
+                return { success: true };
+            }
+        },
+        removeFromCart({ commit }, productId) {
+            commit('REMOVE_FROM_CART', productId);
+        },
+        loadCart({ commit }) {
+            const cart = JSON.parse(localStorage.getItem('cart')) || [];
+            commit('SET_CART', cart);
+        },
+        updateCartQuantity({ commit }, { productId, quantity }) {
+            commit('UPDATE_CART_QUANTITY', { productId, quantity });
         }
     },
+    getters: {
+        cartTotal: state => {
+            return state.cart.reduce((total, item) => {
+                return total + (item.price * item.quantity);
+            }, 0);
+        },
+        cartItemsCount: state => {
+            return state.cart.length;
+        }
+    }
 });

@@ -18,32 +18,10 @@
                 <span></span>
                 <div class="city">
                     <button @click="toggleDropdown">{{ choosed }}</button>
-                    <div class="popup" v-if="isDropdownOpen">
-                        <div class="popup-header">
-                            <button @click="toggleDropdown">
-                                <img src="../assets/img/close.png" alt="">
-                            </button>
-                        </div>
-                        <div class="popup-main">
-                            <input type="text" name="city" id="city" placeholder="Поиск города..."
-                                v-model="citySearch" />
-                            <p>Выберите из списка:</p>
-                            <div class="cities">
-                                <ul class="cities-list">
-                                    <li v-for="city in filteredCities" :key="city.code" @click="selectCity(city)">
-                                        {{ city.name }}
-                                    </li>
-                                </ul>
-                            </div>
-                        </div>
-                        <div class="without-city">
-                            <a href="#" @click.prevent="continueWithoutCity">Продолжить без города</a>
-                        </div>
-                    </div>
                 </div>
             </div>
             <div class="social-media">
-                <router-link :to="{ name: 'faq' }">Вопросы-ответы</router-link>
+                <router-link :to="{ name: 'faq' }">Вопрос-ответ</router-link>
                 <a href="https://www.facebook.com/harvunity">
                     <img src="../assets/img/facebook.png" alt="">
                 </a>
@@ -58,9 +36,7 @@
         <div :class="['header-main', { 'fixed': isFixed }]">
             <div class="container container-land">
                 <div class="shop">
-                    <a href="/">
-                        <img src="../assets/img/logo.png" alt="">
-                    </a>
+                    <router-link :to="{ name: 'main' }"><img src="../assets/img/logo.png" alt=""></router-link>
                     <div class="catalog">
                         <div class="bars">
                             <span></span>
@@ -80,30 +56,30 @@
                         <img src="../assets/img/inst.png" alt="">
                         <p>ВОЙТИ</p>
                     </button>
-                    <button class="favourite">
+                    <button class="favourite" @click="openFavouritesPopup">
                         <img src="../assets/img/inst.png" alt="">
                         <p>ИЗБРАННОЕ</p>
                     </button>
-                    <button class="cart">
+                    <button class="cart" @click="openCartPopup">
                         <img src="../assets/img/inst.png" alt="">
                         <p>КОРЗИНА</p>
                         <div class="total">
-                            <p>0</p>
-                            <p>AMD</p>
+                            <p>{{ cartTotal }}</p>
+                            <p>RUB</p>
                         </div>
                     </button>
                 </div>
             </div>
             <div class="search mobile">
-                    <input type="text" name="search" id="search" placeholder="Search for...">
-                    <button><img src="../assets/img/loop.png" alt=""></button>
+                <input type="text" name="search" id="search" placeholder="Search for...">
+                <button><img src="../assets/img/loop.png" alt=""></button>
             </div>
             <div class="container mobile">
-                <button>
+                <button @click="openMenuPopup">
                     <img src="../assets/img/headerMenu.png" alt="">
                 </button>
                 <a href="/">
-                    <img src="../assets/img/logo.png" alt="">
+                    <router-link :to="{ name: 'main' }"><img src="../assets/img/logo.png" alt=""></router-link>
                 </a>
                 <button>
                     <img src="../assets/img/headerCart.png" alt="">
@@ -111,14 +87,104 @@
             </div>
         </div>
     </header>
-    <QuickView v-if="showLoginPopup" 
-        :view-type="'login'"
-        @close-popup="showLoginPopup = false" />
+    <div class="container-menu" :class="{ active: showMenuPopup }">
+        <div class="content-menu">
+            <button @click="openMenuPopup" class="back">
+                <img src="../assets/img/close.png" alt="">
+            </button>
+            <div class="content">
+                <router-link :to="{ name: 'main' }"><img src="../assets/img/logo.png" alt=""></router-link>
+                <div class="options">
+                    <select name="currency" id="currency">
+                        <option value="RUB">RUB</option>
+                        <option value="USD">USD</option>
+                        <option value="EUR">EUR</option>
+                        <option value="AMD">AMD</option>
+                    </select>
+                    <select id="language">
+                        <option value="ru">Russian</option>
+                        <option value="en">English</option>
+                        <option value="am">Armenian</option>
+                    </select>
+                    <div class="city">
+                        <button @click="toggleDropdown">{{ choosed }}</button>
+                    </div>
+                </div>
+                <div class="categories-container">
+                    <div class="buttons">
+                        <button @click="showMenu" :class="{ active: isActive }">MENU</button>
+                        <button @click="showCategory" :class="{ active: !isActive }">КАТЕГОРИИ</button>
+                    </div>
+                    <div class="hrefs">
+                        <div class="categories" v-if="isActive === true">
+                            <a href="">Мои заказы</a>
+                            <a href="">Все товары</a>
+                            <a href="">О компании</a>
+                            <a href="">Блог</a>
+                            <a href="">Связаться с нами</a>
+                        </div>
+                        <div class="categories" v-if="isActive === false">
+                            <a href="">Экзотика</a>
+                            <a href="">Овощи</a>
+                            <a href="">Ягоды</a>
+                            <a href="">Кофе и чай</a>
+                            <a href="">Орехи</a>
+                            <a href="">Сладости</a>
+                            <a href="">Травы и специи</a>
+                            <a href="">Чипсы - слайсы</a>
+                            <a href="">Фрукты</a>
+                            <a href="">Сухофрукты</a>
+                        </div>
+                        <router-link :to="{ name: 'faq' }" class="faq" @click="openMenuPopup">Вопрос-ответ</router-link>
+                        <div class="media">
+                            <a href="https://www.facebook.com/harvunity">
+                                <img src="../assets/img/facebook.png" alt="">
+                            </a>
+                            <a href="https://www.instagram.com/harvunity">
+                                <img src="../assets/img/inst.png" alt="">
+                            </a>
+                            <a href="https://vk.com/harvunity">
+                                <img src="../assets/img/vk.png" alt="">
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <QuickView v-if="showLoginPopup" :view-type="'login'" @close-popup="showLoginPopup = false" />
+    <QuickView v-if="showFavouritesPopup" :view-type="'favourites'" @close-popup="showFavouritesPopup = false" />
+    <QuickView v-if="showCartPopup" :view-type="'cart'" @close-popup="showCartPopup = false" />
+
+    <div class="city-popup-overlay" v-if="isDropdownOpen" @click="handleOutsideClick">
+        <div class="city-popup" @click.stop>
+            <div class="popup-header">
+                <button @click="toggleDropdown">
+                    <img src="../assets/img/close.png" alt="">
+                </button>
+            </div>
+            <div class="popup-main">
+                <input type="text" name="city" id="city" placeholder="Поиск города..." v-model="citySearch" />
+                <p>Выберите из списка:</p>
+                <div class="cities">
+                    <ul class="cities-list">
+                        <li v-for="city in filteredCities" :key="city.code" @click="selectCity(city)">
+                            {{ city.name }}
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <div class="without-city">
+                <a href="#" @click.prevent="continueWithoutCity">Продолжить без города</a>
+            </div>
+        </div>
+    </div>
 </template>
 
 <script>
 import { ref, computed, onMounted, onBeforeUnmount } from 'vue';
 import QuickView from './quickView.vue';
+import { mapGetters } from 'vuex';
 
 export default {
     components: {
@@ -193,13 +259,48 @@ export default {
     },
     data() {
         return {
-            showLoginPopup: false
+            isActive: true,
+            showLoginPopup: false,
+            showFavouritesPopup: false,
+            showMenuPopup: false,
+            showCartPopup: false,
         }
+    },
+    computed: {
+        ...mapGetters(['cartTotal'])
     },
     methods: {
         openLoginPopup() {
             this.showLoginPopup = true;
+        },
+        openMenuPopup() {
+            this.showMenuPopup = !this.showMenuPopup;
+            if (this.showMenuPopup) {
+                document.body.style.overflow = 'hidden';
+            } else {
+                document.body.style.overflow = '';
+            }
+        },
+        openFavouritesPopup() {
+            this.showFavouritesPopup = true;
+        },
+        showMenu() {
+            this.isActive = true;
+        },
+        showCategory() {
+            this.isActive = false;
+        },
+        openCartPopup() {
+            this.showCartPopup = true;
+        },
+        handleOutsideClick(event) {
+            if (event.target.classList.contains('city-popup-overlay')) {
+                this.isDropdownOpen = false;
+            }
         }
     },
+    beforeUnmount() {
+        document.body.style.overflow = '';
+    }
 }
 </script>

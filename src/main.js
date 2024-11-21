@@ -5,9 +5,10 @@ import store from './store/store';
 
 const app = createApp(App);
 
-// Регистрируем глобальные компоненты, если они есть
-app.use(router);
-app.use(store);
+// Загружаем данные корзины при старте приложения
+store.dispatch('loadCart');
+store.dispatch('loadWishlist');
 
-// Монтируем приложение
+app.use(store);
+app.use(router);
 app.mount('#app');
