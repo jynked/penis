@@ -95,7 +95,7 @@
 <script>
 import { mapState, mapActions } from 'vuex';
 import ProductCard from '@/components/productCard.vue';
-import ProductInfo from '@/components/productInfo.vue';
+import { catalogData } from '@/components/productInfo.vue';
 
 export default {
     components: {
@@ -118,6 +118,11 @@ export default {
             currentWordIndex: 0,
         };
     },
+    created() {
+        this.catalog = catalogData;
+        this.$store.dispatch('loadWishlist');
+        this.loadWishlist();
+    },
     computed: {
         visibleLetters() {
             return this.words.map((word, wordIndex) => {
@@ -126,12 +131,6 @@ export default {
             });
         },
         ...mapState(['wishlist']),
-    },
-    mounted() {
-        this.startTypingEffect();
-        this.catalog = ProductInfo.data().catalog;
-        this.$store.dispatch('loadWishlist');
-        this.loadWishlist();
     },
     methods: {
 

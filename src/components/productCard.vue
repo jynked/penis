@@ -22,7 +22,7 @@
             <input type="number" v-model="localQuantity" min="1" :max="maxItems" @input="checkQuantity">
             <button @click="increaseQuantity">+</button>
             <button class="add-to-cart" @click="addToCart">
-                buy
+                <img src="../assets/img/cart.png" alt="">
             </button>
         </div>
         <p v-if="cartError" class="cart-error">{{ cartError }}</p>
@@ -168,3 +168,12 @@ export default {
     }
 };
 </script>
+
+<style scoped>
+.cart-error {
+    color: #ff0000;
+    font-size: 12px;
+    margin-top: 5px;
+    text-align: center;
+}
+</style>
