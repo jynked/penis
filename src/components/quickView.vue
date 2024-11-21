@@ -18,14 +18,15 @@
                             <img src="../assets/img/correct.png" alt="">
                             <p>{{ maxItems }} in stock</p>
                         </div>
-                        <div class="calc">
+                        <div class="calc" style="position: relative;">
                             <button @click="decreaseQuantity">-</button>
                             <input type="number" min="1" :max="maxItems" v-model="localQuantity" @input="checkQuantity">
                             <button @click="increaseQuantity">+</button>
-                            <button class="add-to-cart">
+                            <button class="add-to-cart" @click="addToCart">
                                 <img src="../assets/img/cart.png" alt="">
                                 <p>ADD TO CART</p>
                             </button>
+                            <p v-if="cartError" class="cart-error" style="margin-bottom: -17px;">{{ cartError }}</p>
                         </div>
                         <div class="or">
                             <span></span>
@@ -292,6 +293,7 @@ export default {
             isLogin: true,
             role: 'client',
             localQuantity: this.quantity,
+            cartError: null
         };
     },
     methods: {
@@ -341,6 +343,24 @@ export default {
         },
         toggleItemWishlist(item) {
             this.$store.dispatch('toggleWishlist', item);
+        },
+        async addToCart() {
+            const result = await this.$store.dispatch('addToCart', {
+                product: {
+                    id: this.id,
+                    name: this.name,
+                    price: this.price,
+                    image: this.image
+                },
+                quantity: this.localQuantity
+            });
+            
+            if (result.error) {
+                this.cartError = result.error;
+                setTimeout(() => {
+                    this.cartError = null;
+                }, 3000); // Сообщение исчезнет через 3 секунды
+            }
         }
     },
     computed: {
