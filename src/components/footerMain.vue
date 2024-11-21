@@ -8,8 +8,8 @@
             </div>
             <div class="component">
                 <p class="heading">Партнёрам</p>
-                <a href="/log">Войти в личный кабинет</a>
-                <a href="/log">Стать партнёром</a>
+                <router-link :to="{ name: 'log' }">Войти в личный кабинет</router-link>
+                <router-link :to="{ name: 'log' }">Стать партнером</router-link>
             </div>
             <div class="component">
                 <p class="heading">Покупателям</p>
