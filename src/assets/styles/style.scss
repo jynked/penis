@@ -539,13 +539,13 @@ header {
     }
 
     .for-seller {
-        display: flex;
-        flex-direction: column;
+        display: flex !important;
+        flex-direction: column !important;
         gap: 20px;
 
         .data-block {
-            display: flex;
-            flex-direction: row;
+            display: flex !important;
+            flex-direction: row !important;
             width: 100%;
             gap: 40px;
 
@@ -562,8 +562,8 @@ header {
     }
 
     .who-are-you {
-        display: flex;
-        flex-direction: column;
+        display: flex !important;
+        flex-direction: column !important;
         gap: 25px;
 
         input {
@@ -1956,9 +1956,7 @@ footer {
     #register-form {
         .for-seller {
             .data-block {
-                display: flex;
-                flex-direction: row;
-                flex-wrap: wrap;
+                flex-wrap: wrap !important;
 
                 .data {
                     width: 100%;
