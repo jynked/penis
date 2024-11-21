@@ -11,10 +11,12 @@ const routes = [
   },
   {
     path: '/log',
+    name: 'log',
     component: AccountReg,
   },
   {
     path: '/faq',
+    name: 'faq',
     component: FAQ,
   },
   {
