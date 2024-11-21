@@ -2054,19 +2054,19 @@ header {
             align-items: center;
 
             .content {
+                height: 100%;
+                width: 100%;
                 display: flex;
                 flex-direction: column;
-                align-items: center;
-                width: 100%;
+                padding: 20px;
+                position: relative; /* Добавляем для правильного позиционирования */
             }
 
             .catalog {
-                overflow-y: auto;
-                height: 100%;
+                flex-grow: 1; /* Позволяем каталогу растягиваться */
+                overflow-y: auto; /* Добавляем прокрутку */
                 width: 100%;
-                padding: 20px;
-                display: flex;
-                flex-direction: column;
+                padding-bottom: 20px; /* Добавляем отступ снизу */
             }
 
 
@@ -2136,9 +2136,11 @@ header {
             }
 
             .heading {
+                flex-shrink: 0; /* Фиксируем заголовок */
                 display: flex;
                 flex-direction: column;
                 align-items: center;
+                margin-bottom: 20px;
             }
 
             .heart-counter {
