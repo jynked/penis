@@ -2216,6 +2216,12 @@ header {
                 }
             }
 
+            .empty-cart {
+                text-align: center;
+                padding: 20px;
+                color: #666;
+            }
+
             .catalog {
                 flex-grow: 1;
                 overflow-y: auto;

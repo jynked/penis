@@ -270,8 +270,23 @@ export default {
         ...mapGetters(['cartTotal'])
     },
     methods: {
+        openCartPopup() {
+            this.showCartPopup = true;
+            this.showFavouritesPopup = false;
+            this.showLoginPopup = false;
+            this.showMenuPopup = false;
+        },
+        openFavouritesPopup() {
+            this.showFavouritesPopup = true;
+            this.showCartPopup = false;
+            this.showLoginPopup = false;
+            this.showMenuPopup = false;
+        },
         openLoginPopup() {
             this.showLoginPopup = true;
+            this.showCartPopup = false;
+            this.showFavouritesPopup = false;
+            this.showMenuPopup = false;
         },
         openMenuPopup() {
             this.showMenuPopup = !this.showMenuPopup;
@@ -281,18 +296,11 @@ export default {
                 document.body.style.overflow = '';
             }
         },
-        openFavouritesPopup() {
-            this.showFavouritesPopup = true;
-        },
         showMenu() {
             this.isActive = true;
         },
         showCategory() {
             this.isActive = false;
-        },
-        openCartPopup() {
-            console.log('Opening cart popup');
-            this.showCartPopup = true;
         },
         handleOutsideClick(event) {
             if (event.target.classList.contains('city-popup-overlay')) {

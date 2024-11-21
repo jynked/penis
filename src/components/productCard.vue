@@ -22,17 +22,13 @@
             <input type="number" v-model="localQuantity" min="1" :max="maxItems" @input="checkQuantity">
             <button @click="increaseQuantity">+</button>
             <button class="add-to-cart" @click="addToCart">
-                <img src="../assets/img/cart.png" alt="">
+                ADD
             </button>
         </div>
         <p v-if="cartError" class="cart-error">{{ cartError }}</p>
 
-        <QuickView v-if="showProductPopup"
-            :view-type="'product'"
-            v-bind="productDetails"
-            @update-quantity="updateQuantity"
-            @close-popup="showProductPopup = false"
-            @wishlist="wishlistToggle" />
+        <QuickView v-if="showProductPopup" :view-type="'product'" v-bind="productDetails"
+            @update-quantity="updateQuantity" @close-popup="showProductPopup = false" @wishlist="wishlistToggle" />
     </div>
 </template>
 <script>
@@ -157,7 +153,7 @@ export default {
                 },
                 quantity: this.localQuantity
             });
-            
+
             if (result.error) {
                 this.cartError = result.error;
                 setTimeout(() => {

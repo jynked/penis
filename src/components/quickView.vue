@@ -1,7 +1,7 @@
 <template>
     <div class="quick-view" @click="handleClickOutside">
         <div class="container">
-            <div class="main-product" v-if="viewType === 'product'" style="display: block;">
+            <div v-if="viewType === 'product'" key="product" class="main-product" style="display: block;">
                 <button class="back" @click="closePopup"><img src="../assets/img/close.png" alt=""></button>
                 <div class="content" @click.stop>
                     <div class="fruit-image">
@@ -80,7 +80,7 @@
                     </div>
                 </div>
             </div>
-            <div class="main-log" v-if="viewType === 'login'" style="display: block;">
+            <div v-if="viewType === 'login'" key="login" class="main-log" style="display: block;">
                 <button class="back" @click="closePopup"><img src="../assets/img/close.png" alt=""></button>
                 <div class="content" @click.stop>
                     <div class="title">
@@ -180,7 +180,7 @@
                     </div>
                 </div>
             </div>
-            <div class="main-favourites" v-if="viewType === 'favourites'">
+            <div v-if="viewType === 'favourites'" key="favourites" class="main-favourites">
                 <button class="back" @click="closePopup"><img src="../assets/img/close.png" alt=""></button>
                 <div class="content" @click.stop>
                     <div class="heading">
@@ -198,7 +198,7 @@
                             <div v-for="item in wishlist" 
                                  :key="item.id" 
                                  class="product">
-                                <img :src="require(`@/assets/img/${item.image}`)" :alt="item.name">
+                                <img :src="getImageUrl(item.image)" :alt="item.name">
                                 <div class="info">
                                     <p>{{ item.name }}</p>
                                     <p>1 x {{ item.price }}₽</p>
@@ -211,7 +211,7 @@
                     </div>
                 </div>
             </div>
-            <div class="main-cart" v-if="viewType === 'cart'">
+            <div v-if="viewType === 'cart'" key="cart" class="main-cart">
                 <button class="back" @click="closePopup"><img src="../assets/img/close.png" alt=""></button>
                 <div class="content" @click.stop>
                     <div class="heading">
@@ -229,7 +229,7 @@
                             <div v-for="item in cart" 
                                  :key="item.id" 
                                  class="product">
-                                <img :src="require(`@/assets/img/${item.image}`)" :alt="item.name">
+                                <img :src="getImageUrl(item.image)" :alt="item.name">
                                 <div class="info">
                                     <p>{{ item.name }}</p>
                                     <p>{{ item.quantity }} x {{ item.price }}₽</p>
@@ -238,18 +238,16 @@
                                 <div class="action-buttons">
                                     <div v-if="isItemInWishlist(item.id)" class="browse-wishlist">
                                         <button @click="toggleItemWishlist(item)">
-                                            <img src="../assets/img/favourite.png" alt=""
-                                                style="width: 20px; height: auto;">
+                                            <img src="@/assets/img/favourite.png" alt="">
                                         </button>
                                     </div>
                                     <div v-else class="add-wishlist">
                                         <button @click="toggleItemWishlist(item)">
-                                            <img src="../assets/img/not-favourite.png" alt=""
-                                                style="width: 30px; height: auto; margin-right: -5px">
+                                            <img src="@/assets/img/not-favourite.png" alt="">
                                         </button>
                                     </div>
                                     <button class="remove-cart" @click="removeFromCart(item.id)">
-                                        <img src="../assets/img/close.png" alt="Remove">
+                                        <img src="@/assets/img/close.png" alt="Remove">
                                     </button>
                                 </div>
                             </div>
@@ -360,6 +358,14 @@ export default {
                 setTimeout(() => {
                     this.cartError = null;
                 }, 3000); // Сообщение исчезнет через 3 секунды
+            }
+        },
+        getImageUrl(imageName) {
+            try {
+                return require(`@/assets/img/${imageName}`);
+            } catch (e) {
+                // Возвращаем путь к изображению-заглушке в случае ошибки
+                return require('@/assets/img/orange.jpg');
             }
         }
     },
