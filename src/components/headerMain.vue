@@ -291,7 +291,6 @@ export default {
             this.isActive = false;
         },
         openCartPopup() {
-            console.log('Opening cart popup');
             this.showCartPopup = true;
         },
         handleOutsideClick(event) {
