@@ -238,12 +238,12 @@
                                 <div class="action-buttons">
                                     <div v-if="isItemInWishlist(item.id)" class="browse-wishlist">
                                         <button @click="toggleItemWishlist(item)">
-                                            <img src="@/assets/img/favourite.png" alt="">
+                                            <img src="@/assets/img/favourite.png" alt="" style="width: 25px; height: auto;">
                                         </button>
                                     </div>
                                     <div v-else class="add-wishlist">
                                         <button @click="toggleItemWishlist(item)">
-                                            <img src="@/assets/img/not-favourite.png" alt="">
+                                            <img src="@/assets/img/not-favourite.png" alt="" style="margin-right: 2px;">
                                         </button>
                                     </div>
                                     <button class="remove-cart" @click="removeFromCart(item.id)">
