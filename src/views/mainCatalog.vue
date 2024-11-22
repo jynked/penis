@@ -209,3 +209,86 @@ export default {
     }
 }
 </script>
+
+<style scoped>
+.price-filter {
+    margin-top: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.slider-container {
+    position: relative;
+    width: 100%;
+    height: 50px;
+}
+
+.slider {
+    position: relative;
+    height: 5px;
+    width: 100%;
+    background: #ddd;
+    border-radius: 5px;
+}
+
+.slider .progress {
+    position: absolute;
+    height: 5px;
+    background: #2f2f8c;
+    border-radius: 5px;
+    left: 0%;
+    right: 0%;
+}
+
+.range-input {
+    position: relative;
+    width: 100%;
+}
+
+.range-input input {
+    position: absolute;
+    width: 100%;
+    height: 5px;
+    top: -5px;
+    background: none;
+    pointer-events: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+}
+
+input[type="range"]::-webkit-slider-thumb {
+    height: 17px;
+    width: 17px;
+    border-radius: 50%;
+    background: #2f2f8c;
+    pointer-events: auto;
+    -webkit-appearance: none;
+    cursor: pointer;
+}
+
+input[type="range"]::-moz-range-thumb {
+    height: 17px;
+    width: 17px;
+    border: none;
+    border-radius: 50%;
+    background: #2f2f8c;
+    pointer-events: auto;
+    -moz-appearance: none;
+    cursor: pointer;
+}
+
+.range-input input:nth-child(1) {
+    z-index: 2;
+}
+
+.range-input input:nth-child(2) {
+    z-index: 1;
+}
+
+.price-range {
+    margin-top: 30px;
+    text-align: center;
+    font-weight: bold;
+}
+</style>
