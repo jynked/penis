@@ -191,16 +191,19 @@ export default {
         }
     },
     methods: {
-        handleRangeInput() {
+        handleRangeInput(event) {
+            const isMinSlider = event.target.classList.contains('range-min');
             const min = Number(this.minPrice);
             const max = Number(this.maxPrice);
 
-            if (max <= min) {
-                this.maxPrice = min;
-            }
-
-            if (min >= max) {
-                this.minPrice = max;
+            if (isMinSlider) {
+                if (min > max) {
+                    this.minPrice = max;
+                }
+            } else {
+                if (max < min) {
+                    this.maxPrice = min;
+                }
             }
         },
         updateWishlist({ id }) {
