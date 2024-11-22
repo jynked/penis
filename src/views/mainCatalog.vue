@@ -192,12 +192,15 @@ export default {
     },
     methods: {
         handleRangeInput() {
-            if (Number(this.minPrice) > Number(this.maxPrice)) {
-                if (this.maxPrice === 6000) {
-                    this.minPrice = 6000;
-                } else {
-                    this.maxPrice = this.minPrice;
-                }
+            const min = Number(this.minPrice);
+            const max = Number(this.maxPrice);
+
+            if (min >= max) {
+                this.minPrice = max;
+            }
+
+            if (max <= min) {
+                this.maxPrice = min;
             }
         },
         updateWishlist({ id }) {
