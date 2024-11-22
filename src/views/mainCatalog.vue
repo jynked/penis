@@ -7,11 +7,14 @@
                     <span>/</span>
                     <p>CATALOG</p>
                 </div>
+                <button class="reset-filters" @click="resetAllFilters" style="margin: 0;">
+                    Сбросить все фильтры
+                </button>
                 <div class="categories">
                     <p>КАТЕГОРИИ</p>
                     <span></span>
-                    <select v-model="selectedCategory" @change="handleCategoryChange">
-                        <option value="" disabled checked>Выберите категорию</option>
+                    <select v-model="selectedCategory">
+                        <option value="">Все вместе</option>
                         <option v-for="(category, index) in categories" :key="index" :value="category">
                             {{ category }}
                         </option>
@@ -37,7 +40,10 @@
                     </div>
                 </div>
                 <div class="status">
-                    <p>СТАТУС ПРОДУКТА</p>
+                    <div class="status-header">
+                        <p>СТАТУС ПРОДУКТА</p>
+                        <button class="reset-group" @click="resetProductStatuses">Сбросить</button>
+                    </div>
                     <span></span>
                     <label v-for="status in productStatuses" :key="status.id" class="status-checkbox">
                         <input type="checkbox" v-model="status.model">
@@ -45,7 +51,10 @@
                     </label>
                 </div>
                 <div class="status">
-                    <p>ГОРОД ДОСТАВКИ</p>
+                    <div class="status-header">
+                        <p>ГОРОД ДОСТАВКИ</p>
+                        <button class="reset-group" @click="resetCities">Сбросить</button>
+                    </div>
                     <span></span>
                     <label v-for="city in cities" :key="city.id" class="status-checkbox">
                         <input type="checkbox" v-model="city.model">
@@ -53,31 +62,58 @@
                     </label>
                 </div>
                 <div class="status">
-                    <p>СТРАНА ПРОИЗВОДИТЕЛЬ</p>
+                    <div class="status-header">
+                        <p>СТРАНА ПРОИЗВОДИТЕЛЬ</p>
+                        <button class="reset-group" @click="resetCountry">Сбросить</button>
+                    </div>
                     <span></span>
-                    <label v-for="country in countries" :key="country.id" class="status-checkbox">
-                        <input type="checkbox" v-model="country.model">
+                    <label v-for="country in countries" 
+                           :key="country.id" 
+                           class="status-checkbox">
+                        <input type="radio" 
+                               :value="country.id"
+                               v-model="selectedCountry"
+                               name="country">
                         <p>{{ country.label }}</p>
                     </label>
                 </div>
                 <div class="status">
-                    <p>БРЕНД</p>
+                    <div class="status-header">
+                        <p>БРЕНД</p>
+                        <button class="reset-group" @click="resetBrand">Сбросить</button>
+                    </div>
                     <span></span>
-                    <label v-for="brand in brands" :key="brand.id" class="status-checkbox">
-                        <input type="checkbox" v-model="brand.model">
+                    <label v-for="brand in brands" 
+                           :key="brand.id" 
+                           class="status-checkbox">
+                        <input type="radio" 
+                               :value="brand.id"
+                               v-model="selectedBrand"
+                               name="brand">
                         <p>{{ brand.label }}</p>
                     </label>
                 </div>
                 <div class="status">
-                    <p>БЕСПЛАТНАЯ ДОСТАВКА</p>
+                    <div class="status-header">
+                        <p>БЕСПЛАТНАЯ ДОСТАВКА</p>
+                        <button class="reset-group" @click="resetDelivery">Сбросить</button>
+                    </div>
                     <span></span>
-                    <label v-for="option in delivery" :key="option.id" class="status-checkbox">
-                        <input type="checkbox" v-model="option.model">
+                    <label v-for="option in delivery" 
+                           :key="option.id" 
+                           class="status-checkbox">
+                        <input type="radio" 
+                               :value="option.id"
+                               v-model="selectedDelivery"
+                               name="delivery">
                         <p>{{ option.label }}</p>
                     </label>
                 </div>
                 <div class="status">
-                    <p>ВЕС ТОВАРА</p>
+                    <div class="status-header">
+                        <p>ВЕС ТОВАРА</p>
+                        <button class="reset-group" @click="resetWeights">Сбросить</button>
+                    </div>
                     <span></span>
                     <label v-for="weight in weights" :key="weight.id" class="status-checkbox">
                         <input type="checkbox" v-model="weight.model">
@@ -85,7 +121,10 @@
                     </label>
                 </div>
                 <div class="status">
-                    <p>АТРИБУТ ТОВАРА</p>
+                    <div class="status-header">
+                        <p>АТРИБУТ ТОВАРА</p>
+                        <button class="reset-group" @click="resetAttributes">Сбросить</button>
+                    </div>
                     <span></span>
                     <label v-for="attr in attributes" :key="attr.id" class="status-checkbox">
                         <input type="checkbox" v-model="attr.model">
@@ -100,8 +139,51 @@
                     <a href="#">ЧИТАТЬ БОЛЬШЕ <img src="../assets/img/buttonLink.jpg" alt=""></a>
                 </div>
                 <div class="products">
-                    <ProductCard v-for="product in catalog" :key="product.id" v-bind="product"
-                        @wishlist="updateWishlist" />
+                    <ProductCard v-for="product in paginatedProducts" 
+                                :key="product.id" 
+                                v-bind="product"
+                                @wishlist="updateWishlist" />
+                </div>
+                <div class="pagination" v-if="totalPages > 0">
+                    <button class="arrow" 
+                            @click="prevPage" 
+                            :disabled="currentPage === 1">
+                        ←
+                    </button>
+                    
+                    <template v-if="totalPages <= 3">
+                        <button v-for="page in totalPages" 
+                                :key="page"
+                                :class="['page-number', { active: page === currentPage }]"
+                                @click="goToPage(page)">
+                            {{ page }}
+                        </button>
+                    </template>
+                    
+                    <template v-else>
+                        <button :class="['page-number', { active: currentPage === 1 }]"
+                                @click="goToPage(1)">
+                            1
+                        </button>
+                        <span v-if="currentPage > 2">...</span>
+                        <button v-for="page in middlePages" 
+                                :key="page"
+                                :class="['page-number', { active: page === currentPage }]"
+                                @click="goToPage(page)">
+                            {{ page }}
+                        </button>
+                        <span v-if="currentPage < totalPages - 1">...</span>
+                        <button :class="['page-number', { active: currentPage === totalPages }]"
+                                @click="goToPage(totalPages)">
+                            {{ totalPages }}
+                        </button>
+                    </template>
+                    
+                    <button class="arrow" 
+                            @click="nextPage" 
+                            :disabled="currentPage === totalPages">
+                        →
+                    </button>
                 </div>
             </div>
         </div>
@@ -137,41 +219,41 @@ export default {
 
 
             productStatuses: [
-                { id: 'isAvailable', label: 'В наличии', model: false },
-                { id: 'isOutOfStock', label: 'Нет в наличии', model: false },
-                { id: 'isOnSale', label: 'В продаже', model: false }
+                { id: 'available', label: 'В наличии', model: false },
+                { id: 'outOfStock', label: 'Нет в наличии', model: false },
+                { id: 'onSale', label: 'В продаже', model: false }
             ],
 
             cities: [
-                { id: 'cityVoronezh', label: 'Воронеж', model: false },
-                { id: 'cityKazan', label: 'Казань', model: false },
-                { id: 'cityKrasnodar', label: 'Краснодар', model: false }
+                { id: 'Voronezh', label: 'Воронеж', model: false },
+                { id: 'Kazan', label: 'Казань', model: false },
+                { id: 'Krasnodar', label: 'Краснодар', model: false }
             ],
 
             countries: [
-                { id: 'countryArmenia', label: 'Армения', model: false },
-                { id: 'countryKazakhstan', label: 'Казахстан', model: false },
-                { id: 'countryRussia', label: 'Россия', model: false }
+                { id: 'Armenia', label: 'Армения', model: false },
+                { id: 'Kazakhstan', label: 'Казахстан', model: false },
+                { id: 'Russia', label: 'Россия', model: false }
             ],
 
             brands: [
-                { id: 'brandGainzo', label: 'Gainzo', model: false },
-                { id: 'brandMartstore', label: 'Martstore', model: false },
-                { id: 'brandRawshop', label: 'Rawshop', model: false },
-                { id: 'brandXBekery', label: 'XBekery', model: false }
+                { id: 'Gainzo', label: 'Gainzo' },
+                { id: 'Martstore', label: 'Martstore' },
+                { id: 'Rawshop', label: 'Rawshop' },
+                { id: 'XBekery', label: 'XBekery' }
             ],
 
             delivery: [
-                { id: 'freeDeliveryYes', label: 'Да', model: false },
-                { id: 'freeDeliveryNo', label: 'Нет', model: false }
+                { id: 'freeDeliveryYes', label: 'Да' },
+                { id: 'freeDeliveryNo', label: 'Нет' }
             ],
 
             weights: [
-                { id: 'weight200', label: '200г', model: false },
-                { id: 'weight300', label: '300г', model: false },
-                { id: 'weight400', label: '400г', model: false },
-                { id: 'weight500', label: '500г', model: false },
-                { id: 'weight600', label: '600г', model: false }
+                { id: '200', label: '200г', model: false },
+                { id: '300', label: '300г', model: false },
+                { id: '400', label: '400г', model: false },
+                { id: '500', label: '500г', model: false },
+                { id: '600', label: '600г', model: false }
             ],
 
             attributes: [
@@ -179,7 +261,12 @@ export default {
                 { id: 'attributeFried', label: 'Жареный', model: false },
                 { id: 'attributeSpicy', label: 'Со специями', model: false }
             ],
-            catalog: catalogData
+            catalog: catalogData,
+            selectedCountry: '',
+            selectedBrand: '',
+            currentPage: 1,
+            itemsPerPage: 9,
+            selectedDelivery: ''
         }
     },
     computed: {
@@ -188,6 +275,71 @@ export default {
         },
         maxPercentage() {
             return (this.maxPrice / 6000) * 100;
+        },
+        filteredProducts() {
+            return this.catalog.filter(product => {
+                // Фильтрация по цене
+                const price = Number(product.price);
+                const priceMatch = price >= this.minPrice && price <= this.maxPrice;
+
+                // Фильтрация по категории
+                const categoryMatch = !this.selectedCategory || product.type === this.selectedCategory;
+
+                // Фильтрация по статусу продукта
+                const statusFilters = this.productStatuses.filter(s => s.model).map(s => s.id);
+                const statusMatch = statusFilters.length === 0 || 
+                    statusFilters.every(status => product.status.includes(status));
+
+                // Фильтрация по городам доставки
+                const cityFilters = this.cities.filter(c => c.model).map(c => c.id);
+                const cityMatch = cityFilters.length === 0 || 
+                    cityFilters.every(city => product.deliveryCities.includes(city));
+
+                // Фильтрация по стране производителя (теперь только одна страна)
+                const countryMatch = !this.selectedCountry || product.country === this.selectedCountry;
+
+                // Фильтрация по бренду (теперь только один бренд)
+                const brandMatch = !this.selectedBrand || product.brand === this.selectedBrand;
+
+                // Фильтрация по бесплатной доставке (теперь только один вариант)
+                const deliveryMatch = !this.selectedDelivery || 
+                    (this.selectedDelivery === 'freeDeliveryYes' && product.freeDelivery) ||
+                    (this.selectedDelivery === 'freeDeliveryNo' && !product.freeDelivery);
+
+                // Фильтрация по весу
+                const weightFilters = this.weights.filter(w => w.model).map(w => w.id);
+                const weightMatch = weightFilters.length === 0 || 
+                    weightFilters.every(weight => product.weight.includes(weight));
+
+                // Фильтрация по атрибутам
+                const attributeFilters = this.attributes.filter(a => a.model).map(a => a.id);
+                const attributeMatch = attributeFilters.length === 0 || 
+                    attributeFilters.every(attr => product.attributes.includes(attr));
+
+                // Возвращаем true только если товар соответствует всем выбранным фильтрам
+                return priceMatch && 
+                       categoryMatch && 
+                       statusMatch && 
+                       cityMatch && 
+                       countryMatch && 
+                       brandMatch && 
+                       deliveryMatch && 
+                       weightMatch && 
+                       attributeMatch;
+            });
+        },
+        paginatedProducts() {
+            const start = (this.currentPage - 1) * this.itemsPerPage;
+            const end = start + this.itemsPerPage;
+            return this.filteredProducts.slice(start, end);
+        },
+        totalPages() {
+            return Math.ceil(this.filteredProducts.length / this.itemsPerPage);
+        },
+        middlePages() {
+            if (this.currentPage <= 2) return [2];
+            if (this.currentPage >= this.totalPages - 1) return [this.totalPages - 1];
+            return [this.currentPage];
         }
     },
     methods: {
@@ -197,12 +349,12 @@ export default {
             const max = Number(this.maxPrice);
 
             if (isMinSlider) {
-                if (min > max) {
-                    this.minPrice = max;
+                if (min > max - 300) {
+                    this.minPrice = max - 300;
                 }
             } else {
-                if (max < min) {
-                    this.maxPrice = min;
+                if (max < min + 300) {
+                    this.maxPrice = min + 300;
                 }
             }
         },
@@ -211,90 +363,61 @@ export default {
             if (product) {
                 this.$store.dispatch('toggleWishlist', product);
             }
+        },
+        resetAllFilters() {
+            this.selectedCategory = '';
+            this.minPrice = 0;
+            this.maxPrice = 6000;
+            this.productStatuses.forEach(status => status.model = false);
+            this.cities.forEach(city => city.model = false);
+            this.selectedCountry = '';
+            this.selectedBrand = '';
+            this.selectedDelivery = '';
+            this.weights.forEach(weight => weight.model = false);
+            this.attributes.forEach(attr => attr.model = false);
+        },
+        prevPage() {
+            if (this.currentPage > 1) {
+                this.currentPage--;
+                window.scrollTo(0, 0);
+            }
+        },
+        nextPage() {
+            if (this.currentPage < this.totalPages) {
+                this.currentPage++;
+                window.scrollTo(0, 0);
+            }
+        },
+        goToPage(page) {
+            this.currentPage = page;
+            window.scrollTo(0, 0);
+        },
+        resetProductStatuses() {
+            this.productStatuses.forEach(status => status.model = false);
+        },
+        resetCities() {
+            this.cities.forEach(city => city.model = false);
+        },
+        resetCountry() {
+            this.selectedCountry = '';
+        },
+        resetBrand() {
+            this.selectedBrand = '';
+        },
+        resetDelivery() {
+            this.selectedDelivery = '';
+        },
+        resetWeights() {
+            this.weights.forEach(weight => weight.model = false);
+        },
+        resetAttributes() {
+            this.attributes.forEach(attr => attr.model = false);
+        }
+    },
+    watch: {
+        filteredProducts() {
+            this.currentPage = 1;
         }
     }
 }
 </script>
-
-<style scoped>
-.price-filter {
-    margin-top: 20px;
-    display: flex;
-    flex-direction: column;
-    gap: 15px;
-}
-
-.slider-container {
-    position: relative;
-    width: 100%;
-    height: 50px;
-}
-
-.slider {
-    position: relative;
-    height: 5px;
-    width: 100%;
-    background: #ddd;
-    border-radius: 5px;
-}
-
-.slider .progress {
-    position: absolute;
-    height: 5px;
-    background: #2f2f8c;
-    border-radius: 5px;
-    left: 0%;
-    right: 0%;
-}
-
-.range-input {
-    position: relative;
-    width: 100%;
-}
-
-.range-input input {
-    position: absolute;
-    width: 100%;
-    height: 5px;
-    top: -5px;
-    background: none;
-    pointer-events: none;
-    -webkit-appearance: none;
-    -moz-appearance: none;
-}
-
-input[type="range"]::-webkit-slider-thumb {
-    height: 17px;
-    width: 17px;
-    border-radius: 50%;
-    background: #2f2f8c;
-    pointer-events: auto;
-    -webkit-appearance: none;
-    cursor: pointer;
-}
-
-input[type="range"]::-moz-range-thumb {
-    height: 17px;
-    width: 17px;
-    border: none;
-    border-radius: 50%;
-    background: #2f2f8c;
-    pointer-events: auto;
-    -moz-appearance: none;
-    cursor: pointer;
-}
-
-.range-input input:nth-child(1) {
-    z-index: 2;
-}
-
-.range-input input:nth-child(2) {
-    z-index: 1;
-}
-
-.price-range {
-    margin-top: 30px;
-    text-align: center;
-    font-weight: bold;
-}
-</style>
