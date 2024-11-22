@@ -14,7 +14,7 @@
                         </div>
                     </div>
                     <p class="promo">Подготовьтесь к весне уже сегодня, заплатив <br> $0 за доставку при регистрации у нас…</p>
-                    <a href="/products">В МАГАЗИН <img src="../assets/img/buttonLink.jpg" alt=""></a>
+                    <router-link :to="{ name: 'products' }">В МАГАЗИН <img src="../assets/img/buttonLink.jpg" alt=""></router-link>
                 </div>
             </div>
             <div class="favourites-container" id="favourites">
