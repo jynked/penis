@@ -7,7 +7,8 @@
                     <div class="words">
                         <div v-for="(word, wordIndex) in words" :key="wordIndex" class="word"
                             v-show="currentWordIndex === wordIndex">
-                            <span v-for="(letter, letterIndex) in visibleLetters[wordIndex]" :key="letterIndex">
+                            <span v-for="(letter, letterIndex) in word" :key="letterIndex"
+                                  v-show="isVisible[wordIndex] && isVisible[wordIndex][letterIndex]">
                                 {{ letter }}
                             </span>
                         </div>
@@ -123,6 +124,9 @@ export default {
         this.$store.dispatch('loadWishlist');
         this.loadWishlist();
     },
+    mounted() {
+        this.startTypingEffect();
+    },
     computed: {
         visibleLetters() {
             return this.words.map((word, wordIndex) => {
@@ -164,24 +168,29 @@ export default {
 
         startTypingEffect() {
             this.isVisible = this.words.map(word => Array(word.length).fill(false));
-            this.typeWord(this.currentWordIndex, this.words[this.currentWordIndex]);
+            this.typeWord(this.currentWordIndex);
         },
-        typeWord(wordIndex, word) {
+        typeWord(wordIndex) {
+            const word = this.words[wordIndex];
             word.forEach((_, letterIndex) => {
                 setTimeout(() => {
-                    this.isVisible[wordIndex][letterIndex] = true;
+                    const newVisibleArray = [...this.isVisible];
+                    newVisibleArray[wordIndex] = [...newVisibleArray[wordIndex]];
+                    newVisibleArray[wordIndex][letterIndex] = true;
+                    this.isVisible = newVisibleArray;
+                    
                     if (letterIndex === word.length - 1) {
                         setTimeout(() => {
+                            const resetArray = [...this.isVisible];
+                            resetArray[wordIndex] = Array(word.length).fill(false);
+                            this.isVisible = resetArray;
+                            
                             this.currentWordIndex = (this.currentWordIndex + 1) % this.words.length;
-                            this.resetVisibility();
-                            this.typeWord(this.currentWordIndex, this.words[this.currentWordIndex]);
+                            this.typeWord(this.currentWordIndex);
                         }, this.delayBetweenWords);
                     }
                 }, this.delayBetweenLetters * letterIndex);
             });
-        },
-        resetVisibility() {
-            this.isVisible[this.currentWordIndex] = Array(this.words[this.currentWordIndex].length).fill(false);
         },
 
         ...mapActions(['loadWishlist', 'toggleWishlist']),
