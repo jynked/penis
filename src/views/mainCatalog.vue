@@ -195,12 +195,12 @@ export default {
             const min = Number(this.minPrice);
             const max = Number(this.maxPrice);
 
-            if (min >= max) {
-                this.minPrice = max;
-            }
-
             if (max <= min) {
                 this.maxPrice = min;
+            }
+
+            if (min >= max) {
+                this.minPrice = max;
             }
         },
         updateWishlist({ id }) {
