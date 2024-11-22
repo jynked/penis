@@ -33,10 +33,10 @@
                 <div class="buttons-visible">
                     <a href="#favourites" v-if="visibleCountBestsellers > 8" 
                        @click="loadLessBestsellers" 
-                       class="load-less">Скрыть все</a>
+                       class="load-less">Hide all</a>
                     <button v-if="catalog.length > visibleCountBestsellers" 
                             @click="loadMoreBestsellers"
-                            class="load-more">Загрузить еще</button>
+                            class="load-more">Load more</button>
                 </div>
             </div>
             <div class="popular-container" id="popular">
@@ -54,10 +54,10 @@
                 <div class="buttons-visible">
                     <a href="#popular" v-if="visibleCountPopular > 8" 
                        @click="loadLessPopular" 
-                       class="load-less">Скрыть все</a>
+                       class="load-less">Hide all</a>
                     <button v-if="catalog.length > visibleCountPopular" 
                             @click="loadMorePopular"
-                            class="load-more">Загрузить еще</button>
+                            class="load-more">Load more</button>
                 </div>
             </div>
             <div class="start-day">
@@ -79,10 +79,10 @@
                 <div class="buttons-visible">
                     <a href="#catalog" v-if="visibleCountCatalog > 8" 
                        @click="loadLessCatalog" 
-                       class="load-less">Скрыть все</a>
+                       class="load-less">Hide all</a>
                     <button v-if="catalog.length > visibleCountCatalog" 
                             @click="loadMoreCatalog"
-                            class="load-more">Загрузить еще</button>
+                            class="load-more">Load more</button>
                 </div>
             </div>
         </div>

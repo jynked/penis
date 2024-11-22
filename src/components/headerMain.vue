@@ -116,7 +116,7 @@
                     <div class="hrefs">
                         <div class="categories" v-if="isActive === true">
                             <a href="">Мои заказы</a>
-                            <a href="">Все товары</a>
+                            <router-link :to="{ name: 'products' }" @click="openMenuPopup">Все товары</router-link>
                             <a href="">О компании</a>
                             <a href="">Блог</a>
                             <a href="">Связаться с нами</a>
