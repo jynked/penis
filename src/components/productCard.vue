@@ -1,10 +1,10 @@
 <template>
     <div class="product-card">
         <button v-if="isInWishlist" class="toggle-wishlist" @click="wishlistToggle">
-            <img src='../assets/img/favourite.png' alt="" style="width: 25px; height: auto; margin-right: 5px;">
+            <img src='../assets/img/favourite.png' alt="" style="margin-right: 2px">
         </button>
         <button v-if="!isInWishlist" class="toggle-wishlist" @click="wishlistToggle">
-            <img src="../assets/img/not-favourite.png" alt="" style="width: 35px; height: auto;">
+            <img src="../assets/img/not-favourite.png" alt="" style="width: 25px;">
         </button>
         <div class="image">
             <img :src="imageSrc" alt="">
@@ -25,15 +25,20 @@
                 ADD
             </button>
         </div>
-        <p v-if="cartError" class="cart-error">{{ cartError }}</p>
+        <p v-if="cartError" class="cart-error">Товар уже в корзине</p>
 
-        <QuickView v-if="showProductPopup" :view-type="'product'" v-bind="productDetails"
-            @update-quantity="updateQuantity" @close-popup="showProductPopup = false" @wishlist="wishlistToggle" />
+        <QuickView v-if="showProductPopup" 
+                  :view-type="'product'" 
+                  v-bind="productDetails"
+                  @update-quantity="updateQuantity" 
+                  @close-popup="showProductPopup = false" 
+                  @wishlist="wishlistToggle" />
     </div>
 </template>
+
 <script>
 import { mapState } from 'vuex';
-import QuickView from '../components/quickView.vue';
+import QuickView from './quickView.vue';
 
 export default {
     components: {
@@ -115,8 +120,7 @@ export default {
                 sellerStars: this.sellerStars,
                 starsProduct: this.starsProduct,
                 maxItems: this.maxItems,
-                quantity: this.localQuantity,
-                wishlist: this.isInWishlist
+                quantity: this.localQuantity
             };
         }
     },

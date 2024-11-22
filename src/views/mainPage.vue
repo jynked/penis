@@ -13,11 +13,8 @@
                             </span>
                         </div>
                     </div>
-                    <p class="promo">
-                        Подготовьтесь к весне уже сегодня, заплатив <br>
-                        $0 за доставку при регистрации у нас…
-                    </p>
-                    <a href="/shop">В МАГАЗИН <img src="../assets/img/buttonLink.jpg" alt=""></a>
+                    <p class="promo">Подготовьтесь к весне уже сегодня, заплатив <br> $0 за доставку при регистрации у нас…</p>
+                    <a href="/products">В МАГАЗИН <img src="../assets/img/buttonLink.jpg" alt=""></a>
                 </div>
             </div>
             <div class="favourites-container" id="favourites">
@@ -28,19 +25,18 @@
                     <span></span>
                 </div>
                 <div class="catalog">
-                    <ProductCard v-for="product in catalog.slice(0, visibleCountBestsellers)" :key="product.id"
-                        :image="product.image" :type="product.type" :name="product.name"
-                        :starsProduct="product.starsProduct" :reviews="product.reviews" :sellerStars="product.sellerStars"
-                        :price="product.price" :max-items="product.maxItems" :article="product.article"
-                        :detail="product.detail" :id="product.id" :wishlist="product.wishlist"
+                    <ProductCard v-for="product in catalog.slice(0, visibleCountBestsellers)" 
+                        :key="product.id"
+                        v-bind="product"
                         @wishlist="updateWishlist" />
                 </div>
                 <div class="buttons-visible">
-                    <a href="#favourites" v-if="visibleCountBestsellers > 8" @click="loadLessBestsellers" class="load-less">Hide
-                        everything</a>
-                    <button v-if="catalog.length > visibleCountBestsellers" @click="loadMoreBestsellers"
-                        class="load-more">Load
-                        more</button>
+                    <a href="#favourites" v-if="visibleCountBestsellers > 8" 
+                       @click="loadLessBestsellers" 
+                       class="load-less">Скрыть все</a>
+                    <button v-if="catalog.length > visibleCountBestsellers" 
+                            @click="loadMoreBestsellers"
+                            class="load-more">Загрузить еще</button>
                 </div>
             </div>
             <div class="popular-container" id="popular">
@@ -49,24 +45,24 @@
                     <p>Популярные</p>
                     <span></span>
                 </div>
-                <div class="catalog" id="popular">
-                    <ProductCard v-for="product in catalog.slice(0, visibleCountPopular)" :key="product.id"
-                        :image="product.image" :type="product.type" :name="product.name"
-                        :starsProduct="product.starsProduct" :reviews="product.reviews" :sellerStars="product.sellerStars"
-                        :price="product.price" :max-items="product.maxItems" :article="product.article"
-                        :detail="product.detail" :id="product.id" :wishlist="product.wishlist"
+                <div class="catalog">
+                    <ProductCard v-for="product in catalog.slice(0, visibleCountPopular)" 
+                        :key="product.id"
+                        v-bind="product"
                         @wishlist="updateWishlist" />
                 </div>
                 <div class="buttons-visible">
-                    <a href="#popular" v-if="visibleCountPopular > 8" @click="loadLessPopular" class="load-less">Hide
-                        everything</a>
-                    <button v-if="catalog.length > visibleCountPopular" @click="loadMorePopular" class="load-more">Load
-                        more</button>
+                    <a href="#popular" v-if="visibleCountPopular > 8" 
+                       @click="loadLessPopular" 
+                       class="load-less">Скрыть все</a>
+                    <button v-if="catalog.length > visibleCountPopular" 
+                            @click="loadMorePopular"
+                            class="load-more">Загрузить еще</button>
                 </div>
             </div>
             <div class="start-day">
                 <div class="container">
-                    <p>Начните свой день с вкусных <br> органических овощей</p>
+                    <p>Начните свой день с вкусных органических овощей</p>
                     <a href="/shop">ПЕРЕЙТИ<img src="../assets/img/buttonLink.jpg" alt=""></a>
                 </div>
             </div>
@@ -74,19 +70,19 @@
                 <div class="heading">
                     <p>Все товары</p>
                 </div>
-                <div class="catalog" id="popular">
-                    <ProductCard v-for="product in catalog.slice(0, visibleCountCatalog)" :key="product.id"
-                        :image="product.image" :type="product.type" :name="product.name"
-                        :starsProduct="product.starsProduct" :reviews="product.reviews" :sellerStars="product.sellerStars"
-                        :price="product.price" :max-items="product.maxItems" :article="product.article"
-                        :detail="product.detail" :id="product.id" :wishlist="product.wishlist"
+                <div class="catalog">
+                    <ProductCard v-for="product in catalog.slice(0, visibleCountCatalog)" 
+                        :key="product.id"
+                        v-bind="product"
                         @wishlist="updateWishlist" />
                 </div>
                 <div class="buttons-visible">
-                    <a href="#catalog" v-if="visibleCountCatalog > 8" @click="loadLessCatalog" class="load-less">Hide
-                        everything</a>
-                    <button v-if="catalog.length > visibleCountCatalog" @click="loadMoreCatalog" class="load-more">Load
-                        more</button>
+                    <a href="#catalog" v-if="visibleCountCatalog > 8" 
+                       @click="loadLessCatalog" 
+                       class="load-less">Скрыть все</a>
+                    <button v-if="catalog.length > visibleCountCatalog" 
+                            @click="loadMoreCatalog"
+                            class="load-more">Загрузить еще</button>
                 </div>
             </div>
         </div>

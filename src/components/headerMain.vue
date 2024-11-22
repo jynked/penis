@@ -2,17 +2,16 @@
     <header>
         <div class="header-top">
             <div class="locale">
-                <select name="currency" id="currency">
+                <select>
                     <option value="RUB">RUB</option>
                     <option value="USD">USD</option>
                     <option value="EUR">EUR</option>
                     <option value="AMD">AMD</option>
                 </select>
                 <span></span>
-                <select id="language">
+                <select>
                     <option value="ru">Russian</option>
                     <option value="en">English</option>
-                    <option value="am">Armenian</option>
                 </select>
 
                 <span></span>
@@ -65,7 +64,7 @@
                         <p>КОРЗИНА</p>
                         <div class="total">
                             <p>{{ cartTotal }}</p>
-                            <p>RUB</p>
+                            <p>₽</p>
                         </div>
                     </button>
                 </div>
@@ -95,16 +94,15 @@
             <div class="content">
                 <router-link :to="{ name: 'main' }"><img src="../assets/img/logo.png" alt=""></router-link>
                 <div class="options">
-                    <select name="currency" id="currency">
+                    <select>
                         <option value="RUB">RUB</option>
                         <option value="USD">USD</option>
                         <option value="EUR">EUR</option>
                         <option value="AMD">AMD</option>
                     </select>
-                    <select id="language">
+                    <select>
                         <option value="ru">Russian</option>
                         <option value="en">English</option>
-                        <option value="am">Armenian</option>
                     </select>
                     <div class="city">
                         <button @click="toggleDropdown">{{ choosed }}</button>
@@ -184,7 +182,7 @@
 <script>
 import { ref, computed, onMounted, onBeforeUnmount } from 'vue';
 import QuickView from './quickView.vue';
-import { mapGetters } from 'vuex';
+import { mapState, mapActions, mapGetters } from 'vuex';
 
 export default {
     components: {
@@ -263,13 +261,19 @@ export default {
             showLoginPopup: false,
             showFavouritesPopup: false,
             showMenuPopup: false,
-            showCartPopup: false,
+            showCartPopup: false
         }
     },
     computed: {
-        ...mapGetters(['cartTotal'])
+        ...mapState('localization', ['currentLanguage', 'currentCurrency']),
+        ...mapGetters('localization', ['convertPrice', 'currencySymbol']),
+        ...mapGetters(['cartTotal']),
+        formattedCartTotal() {
+            return `${this.convertPrice(this.cartTotal)} ${this.currencySymbol}`;
+        }
     },
     methods: {
+        ...mapActions('localization', ['setLanguage', 'setCurrency']),
         openCartPopup() {
             this.showCartPopup = true;
             this.showFavouritesPopup = false;
@@ -306,6 +310,29 @@ export default {
             if (event.target.classList.contains('city-popup-overlay')) {
                 this.isDropdownOpen = false;
             }
+        },
+        async changeLanguage(event) {
+            const language = event.target.value;
+            await this.setLanguage(language);
+            this.$i18n.locale = language;
+        },
+        async changeCurrency(event) {
+            const currency = event.target.value;
+            await this.setCurrency(currency);
+        }
+    },
+    created() {
+        // Загружаем сохраненные настройки при создании компонента
+        const savedLanguage = localStorage.getItem('language');
+        const savedCurrency = localStorage.getItem('currency');
+        
+        if (savedLanguage) {
+            this.selectedLanguage = savedLanguage;
+            this.$i18n.locale = savedLanguage;
+        }
+        
+        if (savedCurrency) {
+            this.selectedCurrency = savedCurrency;
         }
     },
     beforeUnmount() {
