@@ -266,9 +266,9 @@ export default {
             ],
 
             attributes: [
-                { id: 'attributeNoSeed', label: 'Без косточки', model: false },
-                { id: 'attributeFried', label: 'Жареный', model: false },
-                { id: 'attributeSpicy', label: 'Со специями', model: false }
+                { id: 'noSeed', label: 'Без косточки', model: false },
+                { id: 'fried', label: 'Жареный', model: false },
+                { id: 'spicy', label: 'Со специями', model: false }
             ],
             catalog: catalogData,
             selectedCountry: '',
@@ -385,9 +385,9 @@ export default {
             this.maxPrice = 6000;
             this.productStatuses.forEach(status => status.model = false);
             this.cities.forEach(city => city.model = false);
-            this.selectedCountry = '';
-            this.selectedBrand = '';
-            this.selectedDelivery = '';
+            this.countries.forEach(country => country.model = false);
+            this.brands.forEach(brand => brand.model = false);
+            this.delivery.forEach(option => option.model = false);
             this.weights.forEach(weight => weight.model = false);
             this.attributes.forEach(attr => attr.model = false);
         },
