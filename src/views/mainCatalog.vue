@@ -36,7 +36,22 @@
                         </div>
                     </div>
                     <div class="price-range">
-                        Price: {{ minPrice }}₽ - {{ maxPrice }}₽
+                        <div class="price-field">
+                            <p>Price:</p>
+                            <input type="number" 
+                                   v-model="minPrice" 
+                                   min="0" 
+                                   max="6000" 
+                                   @input="handlePriceInput">
+                            <p>₽</p>
+                            <p>-</p>
+                            <input type="number" 
+                                   v-model="maxPrice" 
+                                   min="0" 
+                                   max="6000" 
+                                   @input="handlePriceInput">
+                            <p>₽</p>
+                        </div>
                     </div>
                 </div>
                 <div class="status">
@@ -64,32 +79,28 @@
                 <div class="status">
                     <div class="status-header">
                         <p>СТРАНА ПРОИЗВОДИТЕЛЬ</p>
-                        <button class="reset-group" @click="resetCountry">Сбросить</button>
+                        <button class="reset-group" @click="resetCountries">Сбросить</button>
                     </div>
                     <span></span>
                     <label v-for="country in countries" 
                            :key="country.id" 
                            class="status-checkbox">
-                        <input type="radio" 
-                               :value="country.id"
-                               v-model="selectedCountry"
-                               name="country">
+                        <input type="checkbox" 
+                               v-model="country.model">
                         <p>{{ country.label }}</p>
                     </label>
                 </div>
                 <div class="status">
                     <div class="status-header">
                         <p>БРЕНД</p>
-                        <button class="reset-group" @click="resetBrand">Сбросить</button>
+                        <button class="reset-group" @click="resetBrands">Сбросить</button>
                     </div>
                     <span></span>
                     <label v-for="brand in brands" 
                            :key="brand.id" 
                            class="status-checkbox">
-                        <input type="radio" 
-                               :value="brand.id"
-                               v-model="selectedBrand"
-                               name="brand">
+                        <input type="checkbox" 
+                               v-model="brand.model">
                         <p>{{ brand.label }}</p>
                     </label>
                 </div>
@@ -102,10 +113,8 @@
                     <label v-for="option in delivery" 
                            :key="option.id" 
                            class="status-checkbox">
-                        <input type="radio" 
-                               :value="option.id"
-                               v-model="selectedDelivery"
-                               name="delivery">
+                        <input type="checkbox" 
+                               v-model="option.model">
                         <p>{{ option.label }}</p>
                     </label>
                 </div>
@@ -237,15 +246,15 @@ export default {
             ],
 
             brands: [
-                { id: 'Gainzo', label: 'Gainzo' },
-                { id: 'Martstore', label: 'Martstore' },
-                { id: 'Rawshop', label: 'Rawshop' },
-                { id: 'XBekery', label: 'XBekery' }
+                { id: 'Gainzo', label: 'Gainzo', model: false },
+                { id: 'Martstore', label: 'Martstore', model: false },
+                { id: 'Rawshop', label: 'Rawshop', model: false },
+                { id: 'XBekery', label: 'XBekery', model: false }
             ],
 
             delivery: [
-                { id: 'freeDeliveryYes', label: 'Да' },
-                { id: 'freeDeliveryNo', label: 'Нет' }
+                { id: 'freeDeliveryYes', label: 'Да', model: false },
+                { id: 'freeDeliveryNo', label: 'Нет', model: false }
             ],
 
             weights: [
@@ -266,7 +275,8 @@ export default {
             selectedBrand: '',
             currentPage: 1,
             itemsPerPage: 9,
-            selectedDelivery: ''
+            selectedDelivery: '',
+            lastChanged: 'min'
         }
     },
     computed: {
@@ -285,38 +295,43 @@ export default {
                 // Фильтрация по категории
                 const categoryMatch = !this.selectedCategory || product.type === this.selectedCategory;
 
-                // Фильтрация по статусу продукта
+                // Фильтрация по статусу продукта (ИЛИ)
                 const statusFilters = this.productStatuses.filter(s => s.model).map(s => s.id);
                 const statusMatch = statusFilters.length === 0 || 
-                    statusFilters.every(status => product.status.includes(status));
+                    statusFilters.some(status => product.status.includes(status));
 
-                // Фильтрация по городам доставки
+                // Фильтрация по городам доставки (ИЛИ)
                 const cityFilters = this.cities.filter(c => c.model).map(c => c.id);
                 const cityMatch = cityFilters.length === 0 || 
-                    cityFilters.every(city => product.deliveryCities.includes(city));
+                    cityFilters.some(city => product.deliveryCities.includes(city));
 
-                // Фильтрация по стране производителя (теперь только одна страна)
-                const countryMatch = !this.selectedCountry || product.country === this.selectedCountry;
+                // Фильтрация по стране производителя (ИЛИ)
+                const countryFilters = this.countries.filter(c => c.model).map(c => c.id);
+                const countryMatch = countryFilters.length === 0 || 
+                    countryFilters.some(country => product.country === country);
 
-                // Фильтрация по бренду (теперь только один бренд)
-                const brandMatch = !this.selectedBrand || product.brand === this.selectedBrand;
+                // Фильтрация по бренду (ИЛИ)
+                const brandFilters = this.brands.filter(b => b.model).map(b => b.id);
+                const brandMatch = brandFilters.length === 0 || 
+                    brandFilters.some(brand => product.brand === brand);
 
-                // Фильтрация по бесплатной доставке (теперь только один вариант)
-                const deliveryMatch = !this.selectedDelivery || 
-                    (this.selectedDelivery === 'freeDeliveryYes' && product.freeDelivery) ||
-                    (this.selectedDelivery === 'freeDeliveryNo' && !product.freeDelivery);
+                // Фильтрация по бесплатной доставке (ИЛИ)
+                const deliveryFilters = this.delivery.filter(d => d.model).map(d => d.id);
+                const deliveryMatch = deliveryFilters.length === 0 || 
+                    (deliveryFilters.includes('freeDeliveryYes') && product.freeDelivery) ||
+                    (deliveryFilters.includes('freeDeliveryNo') && !product.freeDelivery);
 
-                // Фильтрация по весу
+                // Фильтрация по весу (ИЛИ)
                 const weightFilters = this.weights.filter(w => w.model).map(w => w.id);
                 const weightMatch = weightFilters.length === 0 || 
-                    weightFilters.every(weight => product.weight.includes(weight));
+                    weightFilters.some(weight => product.weight.includes(weight));
 
-                // Фильтрация по атрибутам
+                // Фильтрация по атрибутам (ИЛИ)
                 const attributeFilters = this.attributes.filter(a => a.model).map(a => a.id);
                 const attributeMatch = attributeFilters.length === 0 || 
-                    attributeFilters.every(attr => product.attributes.includes(attr));
+                    attributeFilters.some(attr => product.attributes.includes(attr));
 
-                // Возвращаем true только если товар соответствует всем выбранным фильтрам
+                // Возвращаем true если товар соответствует всем условиям
                 return priceMatch && 
                        categoryMatch && 
                        statusMatch && 
@@ -345,17 +360,17 @@ export default {
     methods: {
         handleRangeInput(event) {
             const isMinSlider = event.target.classList.contains('range-min');
-            const min = Number(this.minPrice);
-            const max = Number(this.maxPrice);
+            this.lastChanged = isMinSlider ? 'min' : 'max';
+            
+            let min = Number(this.minPrice);
+            let max = Number(this.maxPrice);
 
             if (isMinSlider) {
-                if (min > max - 300) {
-                    this.minPrice = max - 300;
-                }
+                min = Math.min(min, max - 100);
+                this.minPrice = min;
             } else {
-                if (max < min + 300) {
-                    this.maxPrice = min + 300;
-                }
+                max = Math.max(max, min + 100);
+                this.maxPrice = max;
             }
         },
         updateWishlist({ id }) {
@@ -398,20 +413,44 @@ export default {
         resetCities() {
             this.cities.forEach(city => city.model = false);
         },
-        resetCountry() {
-            this.selectedCountry = '';
+        resetCountries() {
+            this.countries.forEach(country => country.model = false);
         },
-        resetBrand() {
-            this.selectedBrand = '';
+        resetBrands() {
+            this.brands.forEach(brand => brand.model = false);
         },
         resetDelivery() {
-            this.selectedDelivery = '';
+            this.delivery.forEach(option => option.model = false);
         },
         resetWeights() {
             this.weights.forEach(weight => weight.model = false);
         },
         resetAttributes() {
             this.attributes.forEach(attr => attr.model = false);
+        },
+        handlePriceInput() {
+            // Преобразуем значения в числа
+            let min = Number(this.minPrice);
+            let max = Number(this.maxPrice);
+
+            // Ограничиваем значения
+            min = Math.max(0, Math.min(min, 5900)); // Максимальное значение для минимальной цены
+            max = Math.max(100, Math.min(max, 6000)); // Минимальное значение для максимальной цены
+
+            // Проверяем минимальный диапазон
+            if (min > max - 100) {
+                if (this.lastChanged === 'min') {
+                    // Если изменяли минимальную цену
+                    min = max - 100;
+                } else {
+                    // Если изменяли максимальную цену
+                    max = min + 100;
+                }
+            }
+
+            // Обновляем значения
+            this.minPrice = min;
+            this.maxPrice = max;
         }
     },
     watch: {
