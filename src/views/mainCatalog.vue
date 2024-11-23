@@ -147,13 +147,16 @@
                     <p>Сделайте свой интернет-магазин проще с помощью нашего мобильного приложения</p>
                     <a href="#">ЧИТАТЬ БОЛЬШЕ <img src="../assets/img/buttonLink.jpg" alt=""></a>
                 </div>
-                <div class="products">
+                <div v-if="filteredProducts.length === 0" class="no-products">
+                    <p>Товары по заданным фильтрам не найдены</p>
+                </div>
+                <div v-else class="products">
                     <ProductCard v-for="product in paginatedProducts" 
                                 :key="product.id" 
                                 v-bind="product"
                                 @wishlist="updateWishlist" />
                 </div>
-                <div class="pagination" v-if="totalPages > 0">
+                <div v-if="filteredProducts.length > 0" class="pagination">
                     <button class="arrow" 
                             @click="prevPage" 
                             :disabled="currentPage === 1">
@@ -460,3 +463,16 @@ export default {
     }
 }
 </script>
+
+<style scoped>
+.no-products {
+    width: 100%;
+    padding: 40px 0;
+    text-align: center;
+    color: #666;
+    font-size: 18px;
+    background: #f5f5f5;
+    border-radius: 5px;
+    margin-top: 30px;
+}
+</style>
