@@ -12,6 +12,7 @@
                 <select>
                     <option value="ru">Russian</option>
                     <option value="en">English</option>
+                    <option value="ar">Armenian</option>
                 </select>
 
                 <span></span>
@@ -103,6 +104,7 @@
                     <select>
                         <option value="ru">Russian</option>
                         <option value="en">English</option>
+                        <option value="ar">Armenian</option>
                     </select>
                     <div class="city">
                         <button @click="toggleDropdown">{{ choosed }}</button>
@@ -191,7 +193,7 @@ export default {
     setup() {
         const isDropdownOpen = ref(false);
         const citySearch = ref('');
-        const choosed = ref("Выберите страну");
+        const choosed = ref("Выберите город");
         const isFixed = ref(false); // состояние для фиксированного заголовка
         const headerTopHeight = ref(0); // высота header-top
 

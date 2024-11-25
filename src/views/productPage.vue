@@ -10,10 +10,7 @@
                 <p class="heading">{{ productData.name }}</p>
                 <div class="rate">
                     <div class="stars">
-                        <img v-for="star in productData.starsProduct" 
-                             :key="star" 
-                             src="../assets/img/star.png" 
-                             alt="">
+                        <img v-for="star in productData.starsProduct" :key="star" src="../assets/img/star.png" alt="">
                         <a href="#">({{ productData.reviews }} customer reviews)</a>
                     </div>
                     <span></span>
@@ -34,10 +31,7 @@
                 <div class="user-profile">
                     <img src="../assets/img/inst.png" alt="">
                     <div class="stars">
-                        <img v-for="star in productData.sellerStars" 
-                             :key="star" 
-                             src="../assets/img/star.png" 
-                             alt="">
+                        <img v-for="star in productData.sellerStars" :key="star" src="../assets/img/star.png" alt="">
                     </div>
                 </div>
             </div>
@@ -61,7 +55,8 @@
                     <div class="product-pay">
                         <div class="calc">
                             <button @click="decreaseQuantity">-</button>
-                            <input type="number" min="1" :max="productData.maxItems" v-model="localQuantity" @input="checkQuantity">
+                            <input type="number" min="1" :max="productData.maxItems" v-model="localQuantity"
+                                @input="checkQuantity">
                             <button @click="increaseQuantity">+</button>
                             <button class="add-to-cart" @click="addToCart">
                                 <img src="../assets/img/cart.png" alt="">
@@ -76,6 +71,116 @@
                             <span></span>
                         </div>
                         <a href="#" class="buy-now"><img src="../assets/img/cart.png" alt="">BUY NOW</a>
+                    </div>
+                </div>
+            </div>
+            <div class="specifications">
+                <div class="points">
+                    <button>Description</button>
+                    <button>Deliver</button>
+                    <button>Additional information</button>
+                    <button>Reviews</button>
+                    <button>About the seller</button>
+                    <button>Other products</button>
+                    <button>Send question</button>
+                </div>
+                <div class="description">
+                    <p>Quisque varius diam vel metus mattis, id aliquam diam rhoncus. Proin vitae magna in dui finibus
+                        malesuada et at nulla. Morbi elit ex, viverra vitae ante vel, blandit feugiat ligula. Fusce
+                        fermentum iaculis nibh, at sodales leo maximus a. Nullam ultricies sodales nunc, in pellentesque
+                        lorem mattis quis. Cras imperdiet est in nunc tristique lacinia. Nullam aliquam mauris eu
+                        accumsan tincidunt. Suspendisse velit ex, aliquet vel ornare vel, dignissim a tortor.</p>
+                    <div class="tables">
+                        <div class="table">
+                            <img src="../assets/img/drone.png" alt="">
+                            <div class="text">
+                                <p>DELIVER BY DRONES</p>
+                                <p style="color: rgba(255, 255, 255, 0.5);">At purus consectetur ligula odio faucibus orcin.</p>
+                            </div>
+                        </div>
+                        <div class="table">
+                            <img src="../assets/img/package.png" alt="">
+                            <div class="text">
+                                <p>FRESH PRODUCTS</p>
+                                <p style="color: rgba(255, 255, 255, 0.5);">Feugiat vel sodales ultric ies aliquam suspen.</p>
+                            </div>
+                        </div>
+                        <div class="table">
+                            <img src="../assets/img/search.png" alt="">
+                            <div class="text">
+                                <p>BEST DISCOUNT</p>
+                                <p style="color: rgba(255, 255, 255, 0.5);">Dignissim lectus fermen tum, pulvinar nulla.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <p>Morbi ut sapien vitae odio accumsan gravida. Morbi vitae erat auctor, eleifend nunc a, lobortis
+                        neque. Praesent aliquam dignissim viverra. Maecenas lacus odio, feugiat eu nunc sit amet,
+                        maximus sagittis dolor. Vivamus nisi sapien, elementum sit amet eros sit amet, ultricies cursus
+                        ipsum. Sed consequat luctus ligula. Curabitur laoreet rhoncus blandit. Aenean vel diam ut arcu
+                        pharetra dignissim ut sed leo. Vivamus faucibus, ipsum in vestibulum vulputate, lorem orci
+                        convallis quam, sit amet consequat nulla felis pharetra lacus. Duis semper erat mauris, sed
+                        egestas purus commodo vel.</p>
+                </div>
+                <div class="deliver">
+                    <p>Государства доставки: Краснодар</p> <!--СЮДА ДОЛЖНЫ ПИСАТЬСЯ ГОРОДА deliveryCities ИЗ productInfo-->
+                </div>
+                <div class="additional">
+                    <div class="info">
+                        <p class="parameter">Weight</p>
+                        <p>600</p>
+                    </div>
+                    <div class="info">
+                        <p class="parameter">Color</p>
+                        <p>red</p>
+                    </div>
+                </div>
+                <div class="reviews">
+                    <div class="left">
+                        <p>2 REVIEWS FOR FRESH RED ONION, 3-5 PER PACK ~ 650G</p><!--ЗАМЕНИТЬ ДВОЙКУ НА КОЛИЧЕСТВО ПРОСМОТРОВ И ПОСЛЕ FOR НАПИСАТЬ НАЗВАНИЕ ТОВАРА-->
+                        <div class="review">
+                            <img src="../assets/img/inst.png" alt="">
+                            <div class="text">
+                                <div class="name">
+                                    <p>Rose Tyler</p>
+                                    <div class="stars">
+                                        <img src="../assets/img/star.png" alt="">
+                                        <img src="../assets/img/star.png" alt="">
+                                        <img src="../assets/img/star.png" alt="">
+                                        <img src="../assets/img/star.png" alt="">
+                                        <img src="../assets/img/star.png" alt="">
+                                    </div>
+                                </div>
+                                <div class="date">
+                                    <p>23.02.2022</p>
+                                </div>
+                                <div class="message">
+                                    Un eu mi bibendum neque egestas congue quisque egestas diam in arcu cursus euismod quis viverra nibh cras pulvinar mattis
+                                </div>
+                            </div>
+                        </div>
+                        <div class="review">
+                            <img src="../assets/img/inst.png" alt="">
+                            <div class="text">
+                                <div class="name">
+                                    <p>Rose Tyler</p>
+                                    <div class="stars">
+                                        <img src="../assets/img/star.png" alt="">
+                                        <img src="../assets/img/star.png" alt="">
+                                        <img src="../assets/img/star.png" alt="">
+                                        <img src="../assets/img/star.png" alt="">
+                                    </div>
+                                </div>
+                                <div class="date">
+                                    <p>23.02.2022</p>
+                                </div>
+                                <div class="message">
+                                    Un eu mi bibendum neque egestas congue quisque egestas diam in arcu cursus euismod quis viverra nibh cras pulvinar mattis
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="right">
+                        <p>Only logged in customers who have purchased this product may leave a review.</p>
                     </div>
                 </div>
             </div>
@@ -160,7 +265,7 @@ export default {
                 },
                 quantity: this.localQuantity
             });
-            
+
             if (result.error) {
                 this.cartError = result.error;
                 setTimeout(() => {
