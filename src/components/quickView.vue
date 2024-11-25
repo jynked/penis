@@ -8,7 +8,7 @@
                         <img :src="image" alt="">
                     </div>
                     <div class="info">
-                        <a href="#" class="name">{{ name }}</a>
+                        <a href="#" class="name" @click.prevent="goToProductPage">{{ name }}</a>
                         <p class="price">{{ price }}₽</p>
                         <div class="opinion">
                             <img v-for="star in starArrayProduct" :key="star" src="../assets/img/star.png" alt="">
@@ -197,13 +197,14 @@
                         <div v-else class="wishlist-items">
                             <div v-for="item in wishlist" 
                                  :key="item.id" 
-                                 class="product">
+                                 class="product"
+                                 @click="goToProductPageFromList(item)">
                                 <img :src="getImageUrl(item.image)" :alt="item.name">
                                 <div class="info">
                                     <p>{{ item.name }}</p>
                                     <p>1 x {{ item.price }}₽</p>
                                 </div>
-                                <button class="remove-wishlist" @click="removeFromWishlist(item)">
+                                <button class="remove-wishlist" @click.stop="removeFromWishlist(item)">
                                     <img src="../assets/img/close.png" alt="Remove">
                                 </button>
                             </div>
@@ -229,8 +230,10 @@
                             <div v-for="item in cart" 
                                  :key="item.id" 
                                  class="product">
-                                <img :src="getImageUrl(item.image)" :alt="item.name">
-                                <div class="info">
+                                <img :src="getImageUrl(item.image)" 
+                                     :alt="item.name" 
+                                     @click="goToProductPageFromList(item)">
+                                <div class="info" @click="goToProductPageFromList(item)">
                                     <p>{{ item.name }}</p>
                                     <p>{{ item.quantity }} x {{ item.price }}₽</p>
                                     <p class="total">Итого: {{ item.quantity * item.price }}₽</p>
@@ -246,8 +249,8 @@
                                             <img src="@/assets/img/not-favourite.png" alt="" style="margin-right: 2px;">
                                         </button>
                                     </div>
-                                    <button class="remove-cart" @click="removeFromCart(item.id)">
-                                        <img src="@/assets/img/close.png" alt="Remove">
+                                    <button class="remove-cart" @click.stop="removeFromCart(item.id)">
+                                        <img src="../assets/img/close.png" alt="Remove">
                                     </button>
                                 </div>
                             </div>
@@ -367,6 +370,47 @@ export default {
                 // Возвращаем путь к изображению-заглушке в случае ошибки
                 return require('@/assets/img/orange.jpg');
             }
+        },
+        goToProductPage() {
+            const productData = {
+                name: this.name,
+                price: this.price,
+                image: this.image,
+                starsProduct: this.starsProduct,
+                reviews: this.reviews,
+                article: this.article,
+                sellerStars: this.sellerStars,
+                maxItems: this.maxItems,
+                isInWishlist: this.isInWishlist,
+                id: this.id,
+                detail: this.detail
+            };
+            
+            this.$store.dispatch('setSelectedProduct', productData);
+            this.$router.push({ name: 'data' });
+            this.closePopup();
+        },
+        goToProductPageFromList(item) {
+            // Получаем полные данные о товаре из каталога
+            const fullProductData = this.$store.state.catalog.find(p => p.id === item.id) || item;
+            
+            const productData = {
+                name: fullProductData.name,
+                price: fullProductData.price,
+                image: fullProductData.image,
+                starsProduct: fullProductData.starsProduct || 5,
+                reviews: fullProductData.reviews || 0,
+                article: fullProductData.article || '',
+                sellerStars: fullProductData.sellerStars || 5,
+                maxItems: fullProductData.maxItems || 100,
+                isInWishlist: this.isItemInWishlist(fullProductData.id),
+                id: fullProductData.id,
+                detail: fullProductData.detail || ''
+            };
+            
+            this.$store.dispatch('setSelectedProduct', productData);
+            this.$router.push({ name: 'data' });
+            this.closePopup();
         }
     },
     computed: {
@@ -385,6 +429,20 @@ export default {
     watch: {
         quantity(newQuantity) {
             this.localQuantity = newQuantity;
+        },
+        maxItems: {
+            immediate: true,
+            handler(newMaxItems) {
+                if (this.localQuantity > newMaxItems) {
+                    this.localQuantity = 1;
+                }
+            }
+        },
+        id: {
+            immediate: true,
+            handler() {
+                this.localQuantity = 1;
+            }
         }
     },
 }

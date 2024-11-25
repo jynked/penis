@@ -1,4 +1,5 @@
 import { createStore } from 'vuex';
+import { catalogData } from '@/components/productInfo.vue';
 
 export default createStore({
     state: {
@@ -6,6 +7,8 @@ export default createStore({
         cart: [],
         showQuickView: false,
         quickViewContent: null,
+        selectedProduct: null,
+        catalog: catalogData
     },
     mutations: {
         toggleWishlist(state, product) {
@@ -53,6 +56,9 @@ export default createStore({
                 item.quantity = quantity;
                 localStorage.setItem('cart', JSON.stringify(state.cart));
             }
+        },
+        SET_SELECTED_PRODUCT(state, product) {
+            state.selectedProduct = product;
         }
     },
     actions: {
@@ -90,6 +96,9 @@ export default createStore({
         },
         updateCartQuantity({ commit }, { productId, quantity }) {
             commit('UPDATE_CART_QUANTITY', { productId, quantity });
+        },
+        setSelectedProduct({ commit }, product) {
+            commit('SET_SELECTED_PRODUCT', product);
         }
     },
     getters: {

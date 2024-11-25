@@ -38,18 +38,10 @@
                     <div class="price-range">
                         <div class="price-field">
                             <p>Price:</p>
-                            <input type="number" 
-                                   v-model="minPrice" 
-                                   min="0" 
-                                   max="6000" 
-                                   @input="handlePriceInput">
+                            <input type="number" v-model="minPrice" min="0" max="6000" @input="handlePriceInput">
                             <p>₽</p>
                             <p>-</p>
-                            <input type="number" 
-                                   v-model="maxPrice" 
-                                   min="0" 
-                                   max="6000" 
-                                   @input="handlePriceInput">
+                            <input type="number" v-model="maxPrice" min="0" max="6000" @input="handlePriceInput">
                             <p>₽</p>
                         </div>
                     </div>
@@ -62,7 +54,7 @@
                     <span></span>
                     <label v-for="status in productStatuses" :key="status.id" class="status-checkbox">
                         <input type="checkbox" v-model="status.model">
-                        <p>{{ status.label }}</p>
+                        <p>{{ status.label }} ({{ getStatusCount(status.id) }})</p>
                     </label>
                 </div>
                 <div class="status">
@@ -73,7 +65,7 @@
                     <span></span>
                     <label v-for="city in cities" :key="city.id" class="status-checkbox">
                         <input type="checkbox" v-model="city.model">
-                        <p>{{ city.label }}</p>
+                        <p>{{ city.label }} ({{ getCityCount(city.id) }})</p>
                     </label>
                 </div>
                 <div class="status">
@@ -82,12 +74,9 @@
                         <button class="reset-group" @click="resetCountries">Сбросить</button>
                     </div>
                     <span></span>
-                    <label v-for="country in countries" 
-                           :key="country.id" 
-                           class="status-checkbox">
-                        <input type="checkbox" 
-                               v-model="country.model">
-                        <p>{{ country.label }}</p>
+                    <label v-for="country in countries" :key="country.id" class="status-checkbox">
+                        <input type="checkbox" v-model="country.model">
+                        <p>{{ country.label }} ({{ getCountryCount(country.id) }})</p>
                     </label>
                 </div>
                 <div class="status">
@@ -96,12 +85,9 @@
                         <button class="reset-group" @click="resetBrands">Сбросить</button>
                     </div>
                     <span></span>
-                    <label v-for="brand in brands" 
-                           :key="brand.id" 
-                           class="status-checkbox">
-                        <input type="checkbox" 
-                               v-model="brand.model">
-                        <p>{{ brand.label }}</p>
+                    <label v-for="brand in brands" :key="brand.id" class="status-checkbox">
+                        <input type="checkbox" v-model="brand.model">
+                        <p>{{ brand.label }} ({{ getBrandCount(brand.id) }})</p>
                     </label>
                 </div>
                 <div class="status">
@@ -110,12 +96,9 @@
                         <button class="reset-group" @click="resetDelivery">Сбросить</button>
                     </div>
                     <span></span>
-                    <label v-for="option in delivery" 
-                           :key="option.id" 
-                           class="status-checkbox">
-                        <input type="checkbox" 
-                               v-model="option.model">
-                        <p>{{ option.label }}</p>
+                    <label v-for="option in delivery" :key="option.id" class="status-checkbox">
+                        <input type="checkbox" v-model="option.model">
+                        <p>{{ option.label }} ({{ getDeliveryCount(option.id) }})</p>
                     </label>
                 </div>
                 <div class="status">
@@ -126,7 +109,7 @@
                     <span></span>
                     <label v-for="weight in weights" :key="weight.id" class="status-checkbox">
                         <input type="checkbox" v-model="weight.model">
-                        <p>{{ weight.label }}</p>
+                        <p>{{ weight.label }} ({{ getWeightCount(weight.id) }})</p>
                     </label>
                 </div>
                 <div class="status">
@@ -137,7 +120,7 @@
                     <span></span>
                     <label v-for="attr in attributes" :key="attr.id" class="status-checkbox">
                         <input type="checkbox" v-model="attr.model">
-                        <p>{{ attr.label }}</p>
+                        <p>{{ attr.label }} ({{ getAttributeCount(attr.id) }})</p>
                     </label>
                 </div>
             </div>
@@ -151,49 +134,38 @@
                     <p>Товары по заданным фильтрам не найдены</p>
                 </div>
                 <div v-else class="products">
-                    <ProductCard v-for="product in paginatedProducts" 
-                                :key="product.id" 
-                                v-bind="product"
-                                @wishlist="updateWishlist" />
+                    <ProductCard v-for="product in paginatedProducts" :key="product.id" v-bind="product"
+                        @wishlist="updateWishlist" />
                 </div>
                 <div v-if="filteredProducts.length > 0" class="pagination">
-                    <button class="arrow" 
-                            @click="prevPage" 
-                            :disabled="currentPage === 1">
+                    <button class="arrow" @click="prevPage" :disabled="currentPage === 1">
                         ←
                     </button>
-                    
+
                     <template v-if="totalPages <= 3">
-                        <button v-for="page in totalPages" 
-                                :key="page"
-                                :class="['page-number', { active: page === currentPage }]"
-                                @click="goToPage(page)">
+                        <button v-for="page in totalPages" :key="page"
+                            :class="['page-number', { active: page === currentPage }]" @click="goToPage(page)">
                             {{ page }}
                         </button>
                     </template>
-                    
+
                     <template v-else>
-                        <button :class="['page-number', { active: currentPage === 1 }]"
-                                @click="goToPage(1)">
+                        <button :class="['page-number', { active: currentPage === 1 }]" @click="goToPage(1)">
                             1
                         </button>
                         <span v-if="currentPage > 2">...</span>
-                        <button v-for="page in middlePages" 
-                                :key="page"
-                                :class="['page-number', { active: page === currentPage }]"
-                                @click="goToPage(page)">
+                        <button v-for="page in middlePages" :key="page"
+                            :class="['page-number', { active: page === currentPage }]" @click="goToPage(page)">
                             {{ page }}
                         </button>
                         <span v-if="currentPage < totalPages - 1">...</span>
                         <button :class="['page-number', { active: currentPage === totalPages }]"
-                                @click="goToPage(totalPages)">
+                            @click="goToPage(totalPages)">
                             {{ totalPages }}
                         </button>
                     </template>
-                    
-                    <button class="arrow" 
-                            @click="nextPage" 
-                            :disabled="currentPage === totalPages">
+
+                    <button class="arrow" @click="nextPage" :disabled="currentPage === totalPages">
                         →
                     </button>
                 </div>
@@ -300,50 +272,50 @@ export default {
 
                 // Фильтрация по статусу продукта (ИЛИ)
                 const statusFilters = this.productStatuses.filter(s => s.model).map(s => s.id);
-                const statusMatch = statusFilters.length === 0 || 
+                const statusMatch = statusFilters.length === 0 ||
                     statusFilters.some(status => product.status.includes(status));
 
                 // Фильтрация по городам доставки (ИЛИ)
                 const cityFilters = this.cities.filter(c => c.model).map(c => c.id);
-                const cityMatch = cityFilters.length === 0 || 
+                const cityMatch = cityFilters.length === 0 ||
                     cityFilters.some(city => product.deliveryCities.includes(city));
 
                 // Фильтрация по стране производителя (ИЛИ)
                 const countryFilters = this.countries.filter(c => c.model).map(c => c.id);
-                const countryMatch = countryFilters.length === 0 || 
+                const countryMatch = countryFilters.length === 0 ||
                     countryFilters.some(country => product.country === country);
 
                 // Фильтрация по бренду (ИЛИ)
                 const brandFilters = this.brands.filter(b => b.model).map(b => b.id);
-                const brandMatch = brandFilters.length === 0 || 
+                const brandMatch = brandFilters.length === 0 ||
                     brandFilters.some(brand => product.brand === brand);
 
                 // Фильтрация по бесплатной доставке (ИЛИ)
                 const deliveryFilters = this.delivery.filter(d => d.model).map(d => d.id);
-                const deliveryMatch = deliveryFilters.length === 0 || 
+                const deliveryMatch = deliveryFilters.length === 0 ||
                     (deliveryFilters.includes('freeDeliveryYes') && product.freeDelivery) ||
                     (deliveryFilters.includes('freeDeliveryNo') && !product.freeDelivery);
 
                 // Фильтрация по весу (ИЛИ)
                 const weightFilters = this.weights.filter(w => w.model).map(w => w.id);
-                const weightMatch = weightFilters.length === 0 || 
+                const weightMatch = weightFilters.length === 0 ||
                     weightFilters.some(weight => product.weight.includes(weight));
 
                 // Фильтрация по атрибутам (ИЛИ)
                 const attributeFilters = this.attributes.filter(a => a.model).map(a => a.id);
-                const attributeMatch = attributeFilters.length === 0 || 
+                const attributeMatch = attributeFilters.length === 0 ||
                     attributeFilters.some(attr => product.attributes.includes(attr));
 
                 // Возвращаем true если товар соответствует всем условиям
-                return priceMatch && 
-                       categoryMatch && 
-                       statusMatch && 
-                       cityMatch && 
-                       countryMatch && 
-                       brandMatch && 
-                       deliveryMatch && 
-                       weightMatch && 
-                       attributeMatch;
+                return priceMatch &&
+                    categoryMatch &&
+                    statusMatch &&
+                    cityMatch &&
+                    countryMatch &&
+                    brandMatch &&
+                    deliveryMatch &&
+                    weightMatch &&
+                    attributeMatch;
             });
         },
         paginatedProducts() {
@@ -364,7 +336,7 @@ export default {
         handleRangeInput(event) {
             const isMinSlider = event.target.classList.contains('range-min');
             this.lastChanged = isMinSlider ? 'min' : 'max';
-            
+
             let min = Number(this.minPrice);
             let max = Number(this.maxPrice);
 
@@ -454,6 +426,30 @@ export default {
             // Обновляем значения
             this.minPrice = min;
             this.maxPrice = max;
+        },
+        getStatusCount(statusId) {
+            return this.catalog.filter(product => product.status.includes(statusId)).length;
+        },
+        getCityCount(cityId) {
+            return this.catalog.filter(product => product.deliveryCities.includes(cityId)).length;
+        },
+        getCountryCount(countryId) {
+            return this.catalog.filter(product => product.country === countryId).length;
+        },
+        getBrandCount(brandId) {
+            return this.catalog.filter(product => product.brand === brandId).length;
+        },
+        getWeightCount(weightId) {
+            return this.catalog.filter(product => product.weight.includes(weightId)).length;
+        },
+        getAttributeCount(attrId) {
+            return this.catalog.filter(product => product.attributes.includes(attrId)).length;
+        },
+        getDeliveryCount(deliveryId) {
+            return this.catalog.filter(product => 
+                (deliveryId === 'freeDeliveryYes' && product.freeDelivery) ||
+                (deliveryId === 'freeDeliveryNo' && !product.freeDelivery)
+            ).length;
         }
     },
     watch: {
@@ -463,16 +459,3 @@ export default {
     }
 }
 </script>
-
-<style scoped>
-.no-products {
-    width: 100%;
-    padding: 40px 0;
-    text-align: center;
-    color: #666;
-    font-size: 18px;
-    background: #f5f5f5;
-    border-radius: 5px;
-    margin-top: 30px;
-}
-</style>

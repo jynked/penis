@@ -47,7 +47,7 @@
                     </div>
                 </div>
                 <div class="search">
-                    <input type="text" name="search" id="search" placeholder="Search for...">
+                    <input type="text" name="search" id="search" placeholder="Ищите...">
                     <button><img src="../assets/img/loop.png" alt=""></button>
                 </div>
                 <div class="user-logs">
@@ -70,7 +70,7 @@
                 </div>
             </div>
             <div class="search mobile">
-                <input type="text" name="search" id="search" placeholder="Search for...">
+                <input type="text" name="search" id="search" placeholder="Ищите...">
                 <button><img src="../assets/img/loop.png" alt=""></button>
             </div>
             <div class="container mobile">
@@ -196,12 +196,12 @@ export default {
         const headerTopHeight = ref(0); // высота header-top
 
         const cities = [
-            { name: "Албания", code: 'AL' },
-            { name: "Алжир", code: 'DZ' },
-            { name: "Австралия", code: 'AU' },
-            { name: "Албания", code: 'AL' },
-            { name: "Алжир", code: 'DZ' },
-            { name: "Австралия", code: 'AU' },
+            { name: "Пермь", code: 'PERM' },
+            { name: "Чебоксары", code: 'CHEBOKSARY' },
+            { name: "Берлин", code: 'BERLIN' },
+            { name: "Ереван", code: 'BERLIN' },
+            { name: "Чикаго", code: 'CHIKAGO' },
+            { name: "Токио", code: 'TOKYO' },
         ];
 
         const filteredCities = computed(() => {

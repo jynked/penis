@@ -2,6 +2,7 @@ import AccountReg from '@/views/accountReg.vue'
 import FAQ from '@/views/FAQ.vue'
 import MainCatalog from '@/views/mainCatalog.vue'
 import MainPage from '@/views/mainPage.vue'
+import ProductPage from '@/views/productPage.vue'
 import { createRouter, createWebHistory } from 'vue-router'
 
 const routes = [
@@ -24,6 +25,11 @@ const routes = [
     path: '/products',
     name: 'products',
     component: MainCatalog,
+  },
+  {
+    path: '/data',
+    name: 'data',
+    component: ProductPage,
   },
   {
     path: '/:pathMatch(.*)*',

@@ -9,7 +9,7 @@
         <div class="image">
             <img :src="imageSrc" alt="">
             <button class="view-button" @click="openProductPopup">QUICK VIEW</button>
-            <a href="#" class="view-button mobile">QUICK VIEW</a>
+            <a class="view-button mobile" @click.prevent="goToProductPage">QUICK VIEW</a>
         </div>
         <p class="type">{{ type }}</p>
         <p class="name">{{ name }}</p>
@@ -143,6 +143,7 @@ export default {
         },
         openProductPopup() {
             this.showProductPopup = true;
+            this.localQuantity = 1;
         },
         wishlistToggle() {
             this.$emit('wishlist', { id: this.id, wishlist: !this.isInWishlist });
@@ -163,6 +164,34 @@ export default {
                 setTimeout(() => {
                     this.cartError = null;
                 }, 3000); // Сообщение исчезнет через 3 секунды
+            }
+        },
+        goToProductPage() {
+            const productData = {
+                name: this.name,
+                price: this.price,
+                image: this.image,
+                starsProduct: this.starsProduct,
+                reviews: this.reviews,
+                article: this.article,
+                sellerStars: this.sellerStars,
+                maxItems: this.maxItems,
+                isInWishlist: this.isInWishlist,
+                id: this.id,
+                detail: this.detail
+            };
+            
+            this.$store.dispatch('setSelectedProduct', productData);
+            this.$router.push({ name: 'data' });
+        }
+    },
+    watch: {
+        maxItems: {
+            immediate: true,
+            handler(newMaxItems) {
+                if (this.localQuantity > newMaxItems) {
+                    this.localQuantity = 1;
+                }
             }
         }
     }
