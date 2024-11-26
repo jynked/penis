@@ -53,15 +53,15 @@
                 </div>
                 <div class="user-logs">
                     <button class="log" @click="openLoginPopup">
-                        <img src="../assets/img/inst.png" alt="">
+                        <img src="../assets/img/log.png" alt="">
                         <p>ВОЙТИ</p>
                     </button>
                     <button class="favourite" @click="openFavouritesPopup">
-                        <img src="../assets/img/inst.png" alt="">
+                        <img src="../assets/img/favourites.png" alt="">
                         <p>ИЗБРАННОЕ</p>
                     </button>
                     <button class="cart" @click="openCartPopup">
-                        <img src="../assets/img/inst.png" alt="">
+                        <img src="../assets/img/cart.png" alt="">
                         <p>КОРЗИНА</p>
                         <div class="total">
                             <p>{{ cartTotal }}</p>

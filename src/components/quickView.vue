@@ -52,7 +52,7 @@
                             <p id="article">{{ article }}</p>
                         </div>
                         <div class="user">
-                            <img src="../assets/img/inst.png" alt="">
+                            <img src="../assets/img/userLogo.png" alt="">
                             <div class="stars">
                                 <img v-for="star in starArraySeller " :key="star" src="../assets/img/star.png" alt="">
                             </div>
@@ -71,9 +71,7 @@
                             <div class="card card-body">
                                 <div>
                                     <p>{{ detail }}</p>
-                                    <router-link to="/log" style="color: #000;" @click.stop>
-                                        Learn more
-                                    </router-link>
+                                    <a href="#" @click.prevent="goToProductPage" style="color: #000;">Learn more</a>
                                 </div>
                             </div>
                         </div>

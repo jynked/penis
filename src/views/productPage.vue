@@ -29,7 +29,7 @@
                     <p>SKU: <span>{{ productData.article }}</span></p>
                 </div>
                 <div class="user-profile">
-                    <img src="../assets/img/inst.png" alt="">
+                    <img src="../assets/img/userLogo.png" alt="">
                     <div class="stars">
                         <img v-for="star in productData.sellerStars" :key="star" src="../assets/img/star.png" alt="">
                     </div>
@@ -41,11 +41,11 @@
                     <p class="price">{{ productData.price }}₽</p>
                     <p>GET IT TODAY</p>
                     <div class="deliver">
-                        <img src="../assets/img/inst.png" alt="">
+                        <img src="../assets/img/pickup.png" alt="">
                         <p><span>Pickup: </span> Preston Inglewood, Maine 98380</p>
                     </div>
                     <div class="deliver">
-                        <img src="../assets/img/inst.png" alt="">
+                        <img src="../assets/img/shipping.png" alt="">
                         <p><span>Shipping: </span> Unavailable in Your Area</p>
                     </div>
                     <div class="product-stock">
@@ -150,7 +150,7 @@
                     <div class="left">
                         <p>{{ productData.reviews || 0 }} REVIEWS FOR {{ productData.name || 'Product' }}</p>
                         <div class="review">
-                            <img src="../assets/img/inst.png" alt="">
+                            <img src="../assets/img/userLogo.png" alt="">
                             <div class="text">
                                 <div class="name">
                                     <p>Rose Tyler</p>
@@ -171,7 +171,7 @@
                             </div>
                         </div>
                         <div class="review">
-                            <img src="../assets/img/inst.png" alt="">
+                            <img src="../assets/img/userLogo.png" alt="">
                             <div class="text">
                                 <div class="name">
                                     <p>Rose Tyler</p>

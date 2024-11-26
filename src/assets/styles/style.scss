@@ -427,7 +427,6 @@ header {
             font-weight: bold;
         }
     }
-
     .total {
         display: flex;
         flex-direction: row;
@@ -1604,6 +1603,7 @@ header {
                         display: flex;
                         flex-direction: row;
                         align-items: center;
+                        gap: 5px;
 
                         img {
                             width: 30px;
@@ -3081,9 +3081,10 @@ header {
                     flex-direction: row;
                     align-items: center;
                     color: #96B416;
+                    gap: 5px;
 
                     img {
-                        width: 50px;
+                        width: 30px;
                         height: auto;
                     }
                 }
