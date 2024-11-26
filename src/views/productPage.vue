@@ -76,15 +76,27 @@
             </div>
             <div class="specifications">
                 <div class="points">
-                    <button>Description</button>
-                    <button>Deliver</button>
-                    <button>Additional information</button>
-                    <button>Reviews</button>
+                    <button @click="setActiveTab('description')" 
+                            :class="{ active: activeTab === 'description' }">
+                        Description
+                    </button>
+                    <button @click="setActiveTab('deliver')"
+                            :class="{ active: activeTab === 'deliver' }">
+                        Deliver
+                    </button>
+                    <button @click="setActiveTab('additional')"
+                            :class="{ active: activeTab === 'additional' }">
+                        Additional information
+                    </button>
+                    <button @click="setActiveTab('reviews')"
+                            :class="{ active: activeTab === 'reviews' }">
+                        Reviews
+                    </button>
                     <button>About the seller</button>
                     <button>Other products</button>
                     <button>Send question</button>
                 </div>
-                <div class="description">
+                <div class="description" v-show="activeTab === 'description'">
                     <p>Quisque varius diam vel metus mattis, id aliquam diam rhoncus. Proin vitae magna in dui finibus
                         malesuada et at nulla. Morbi elit ex, viverra vitae ante vel, blandit feugiat ligula. Fusce
                         fermentum iaculis nibh, at sodales leo maximus a. Nullam ultricies sodales nunc, in pellentesque
@@ -121,22 +133,22 @@
                         convallis quam, sit amet consequat nulla felis pharetra lacus. Duis semper erat mauris, sed
                         egestas purus commodo vel.</p>
                 </div>
-                <div class="deliver">
-                    <p>Государства доставки: Краснодар</p> <!--СЮДА ДОЛЖНЫ ПИСАТЬСЯ ГОРОДА deliveryCities ИЗ productInfo-->
+                <div class="deliver" v-show="activeTab === 'deliver'">
+                    <p>Города доставки: {{ productData.deliveryCities ? productData.deliveryCities.join(', ') : 'Нет информации' }}</p>
                 </div>
-                <div class="additional">
+                <div class="additional" v-show="activeTab === 'additional'">
                     <div class="info">
-                        <p class="parameter">Weight</p>
-                        <p>600</p>
+                        <p class="parameter">Вес (в граммах)</p>
+                        <p>{{ productData.weight ? productData.weight.join(', ') : 'Нет информации' }}</p>
                     </div>
                     <div class="info">
-                        <p class="parameter">Color</p>
-                        <p>red</p>
+                        <p class="parameter">Цвет</p>
+                        <p>{{ productData.color || 'Нет информации' }}</p>
                     </div>
                 </div>
-                <div class="reviews">
+                <div class="reviews" v-show="activeTab === 'reviews'">
                     <div class="left">
-                        <p>2 REVIEWS FOR FRESH RED ONION, 3-5 PER PACK ~ 650G</p><!--ЗАМЕНИТЬ ДВОЙКУ НА КОЛИЧЕСТВО ПРОСМОТРОВ И ПОСЛЕ FOR НАПИСАТЬ НАЗВАНИЕ ТОВАРА-->
+                        <p>{{ productData.reviews || 0 }} REVIEWS FOR {{ productData.name || 'Product' }}</p>
                         <div class="review">
                             <img src="../assets/img/inst.png" alt="">
                             <div class="text">
@@ -195,7 +207,8 @@ export default {
     data() {
         return {
             localQuantity: 1,
-            cartError: null
+            cartError: null,
+            activeTab: 'description'
         }
     },
     computed: {
@@ -210,7 +223,9 @@ export default {
                 article: '',
                 sellerStars: 0,
                 maxItems: 0,
-                isInWishlist: false
+                isInWishlist: false,
+                deliveryCities: [],
+                weight: []
             };
         },
         isInWishlist() {
@@ -283,8 +298,13 @@ export default {
                 reviews: this.productData.reviews,
                 article: this.productData.article,
                 sellerStars: this.productData.sellerStars,
-                maxItems: this.productData.maxItems
+                maxItems: this.productData.maxItems,
+                deliveryCities: this.productData.deliveryCities,
+                weight: this.productData.weight
             });
+        },
+        setActiveTab(tab) {
+            this.activeTab = tab;
         }
     }
 }

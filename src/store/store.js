@@ -98,7 +98,15 @@ export default createStore({
             commit('UPDATE_CART_QUANTITY', { productId, quantity });
         },
         setSelectedProduct({ commit }, product) {
-            commit('SET_SELECTED_PRODUCT', product);
+            const fullProductData = catalogData.find(p => p.id === product.id) || product;
+            
+            const productWithFullData = {
+                ...product,
+                deliveryCities: fullProductData.deliveryCities || [],
+                weight: fullProductData.weight || []
+            };
+            
+            commit('SET_SELECTED_PRODUCT', productWithFullData);
         }
     },
     getters: {

@@ -3222,6 +3222,10 @@ header {
                 }
 
                 button:hover {
+                    color: #555;
+                    transition: ease .2s;
+                }
+                button.active {
                     color: #000;
                     transition: ease .2s;
                 }
@@ -3272,9 +3276,13 @@ header {
 
             .deliver {
                 width: 100%;
+                padding: 10px 0px 10px 0px;
                 border-bottom: 1px solid #AAA;
                 font-weight: bold;
                 color: #888;
+                p {
+                    margin: 0;
+                }
             }
             .additional {
                 display: flex;
