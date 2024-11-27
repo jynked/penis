@@ -34,13 +34,16 @@
 
 input[type="number"] {
     -webkit-appearance: none;
-    -moz-appearance: textfield;
+    -moz-appearance: textfield !important;
     appearance: none;
 
     &::-webkit-outer-spin-button,
     &::-webkit-inner-spin-button {
         -webkit-appearance: none;
         margin: 0;
+    }
+    &[type=number] {
+        -moz-appearance: textfield !important;
     }
 }
 
