@@ -6,7 +6,7 @@
         <button v-if="!isInWishlist" class="toggle-wishlist" @click="wishlistToggle">
             <img src="../assets/img/not-favourite.png" alt="" style="width: 25px;">
         </button>
-        <div class="image">
+        <div class="image" @click.prevent="goToProductPage">
             <img :src="imageSrc" alt="">
             <button class="view-button" @click="openProductPopup">QUICK VIEW</button>
             <a class="view-button mobile" @click.prevent="goToProductPage">QUICK VIEW</a>

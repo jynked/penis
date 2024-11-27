@@ -76,25 +76,27 @@
             </div>
             <div class="specifications">
                 <div class="points">
-                    <button @click="setActiveTab('description')" 
-                            :class="{ active: activeTab === 'description' }">
-                        Description
+                    <button @click="setActiveTab('description')" :class="{ active: activeTab === 'description' }">
+                        Описание
                     </button>
-                    <button @click="setActiveTab('deliver')"
-                            :class="{ active: activeTab === 'deliver' }">
-                        Deliver
+                    <button @click="setActiveTab('deliver')" :class="{ active: activeTab === 'deliver' }">
+                        Доставка
                     </button>
-                    <button @click="setActiveTab('additional')"
-                            :class="{ active: activeTab === 'additional' }">
-                        Additional information
+                    <button @click="setActiveTab('additional')" :class="{ active: activeTab === 'additional' }">
+                        Дополнительная информация
                     </button>
-                    <button @click="setActiveTab('reviews')"
-                            :class="{ active: activeTab === 'reviews' }">
-                        Reviews
+                    <button @click="setActiveTab('reviews')" :class="{ active: activeTab === 'reviews' }">
+                        Отзывы
                     </button>
-                    <button>About the seller</button>
-                    <button>Other products</button>
-                    <button>Send question</button>
+                    <button @click="setActiveTab('about')" :class="{ active: activeTab === 'about' }">
+                        О продавце
+                    </button>
+                    <button @click="setActiveTab('other')" :class="{ active: activeTab === 'other' }">
+                        Другие товары
+                    </button>
+                    <button @click="setActiveTab('send')" :class="{ active: activeTab === 'send' }">
+                        Задать вопрос
+                    </button>
                 </div>
                 <div class="description" v-show="activeTab === 'description'">
                     <p>Quisque varius diam vel metus mattis, id aliquam diam rhoncus. Proin vitae magna in dui finibus
@@ -107,21 +109,24 @@
                             <img src="../assets/img/drone.png" alt="">
                             <div class="text">
                                 <p>DELIVER BY DRONES</p>
-                                <p style="color: rgba(255, 255, 255, 0.5);">At purus consectetur ligula odio faucibus orcin.</p>
+                                <p style="color: rgba(255, 255, 255, 0.5);">At purus consectetur ligula odio faucibus
+                                    orcin.</p>
                             </div>
                         </div>
                         <div class="table">
                             <img src="../assets/img/package.png" alt="">
                             <div class="text">
                                 <p>FRESH PRODUCTS</p>
-                                <p style="color: rgba(255, 255, 255, 0.5);">Feugiat vel sodales ultric ies aliquam suspen.</p>
+                                <p style="color: rgba(255, 255, 255, 0.5);">Feugiat vel sodales ultric ies aliquam
+                                    suspen.</p>
                             </div>
                         </div>
                         <div class="table">
                             <img src="../assets/img/search.png" alt="">
                             <div class="text">
                                 <p>BEST DISCOUNT</p>
-                                <p style="color: rgba(255, 255, 255, 0.5);">Dignissim lectus fermen tum, pulvinar nulla.</p>
+                                <p style="color: rgba(255, 255, 255, 0.5);">Dignissim lectus fermen tum, pulvinar nulla.
+                                </p>
                             </div>
                         </div>
                     </div>
@@ -166,7 +171,8 @@
                                     <p>23.02.2022</p>
                                 </div>
                                 <div class="message">
-                                    Un eu mi bibendum neque egestas congue quisque egestas diam in arcu cursus euismod quis viverra nibh cras pulvinar mattis
+                                    Un eu mi bibendum neque egestas congue quisque egestas diam in arcu cursus euismod
+                                    quis viverra nibh cras pulvinar mattis
                                 </div>
                             </div>
                         </div>
@@ -186,14 +192,58 @@
                                     <p>23.02.2022</p>
                                 </div>
                                 <div class="message">
-                                    Un eu mi bibendum neque egestas congue quisque egestas diam in arcu cursus euismod quis viverra nibh cras pulvinar mattis
+                                    Un eu mi bibendum neque egestas congue quisque egestas diam in arcu cursus euismod
+                                    quis viverra nibh cras pulvinar mattis
                                 </div>
                             </div>
                         </div>
                     </div>
                     <div class="right">
-                        <p>Only logged in customers who have purchased this product may leave a review.</p>
+                        <p>Оставить отзыв могут только зарегистрированные клиенты, которые приобрели данный продукт.</p>
                     </div>
+                </div>
+                <div class="about" v-show="activeTab === 'about'">
+                    <p>Информация о продавце</p>
+                    <div class="info">
+                        <p>Название магазина: <span>Sunkissed</span></p>
+                        <p>Продавец: <span>Sunkissed</span></p>
+                        <p>Рейтинг: <span>{{ productData.sellerStars ? `${productData.sellerStars} звезд` : 'отсутствует' }}</span></p>
+                    </div>
+                </div>
+                <div class="other" v-show="activeTab === 'other'">
+                    <div class="catalog">
+                        <div v-if="similarProducts.length === 0" class="no-products">
+                            Похожих товаров не найдено
+                        </div>
+                        <ProductCard v-else
+                                    v-for="product in similarProducts" 
+                                    :key="product.id"
+                                    :image="product.image"
+                                    :type="product.type"
+                                    :name="product.name"
+                                    :sellerStars="product.sellerStars"
+                                    :price="product.price"
+                                    :maxItems="product.maxItems"
+                                    :reviews="product.reviews"
+                                    :starsProduct="product.starsProduct"
+                                    :article="product.article"
+                                    :id="product.id"
+                                    :detail="product.detail"
+                                    @wishlist="updateWishlist" />
+                    </div>
+                </div>
+                <div class="send" v-show="activeTab === 'send'">
+                    <p>Вопрос по товару</p>
+                    <form class="text">
+                        <div class="info">
+                            <input type="text" placeholder="Ваше имя" required>
+                            <input type="email" placeholder="you@example.com" required>
+                        </div>
+                        <div class="message">
+                            <textarea name="message" id="message" placeholder="Мой вопрос..." required></textarea>
+                        </div>
+                        <button type="submit">ОТПРАВИТЬ ВОПРОС</button>
+                    </form>
                 </div>
             </div>
         </div>
@@ -202,8 +252,13 @@
 
 <script>
 import { mapState } from 'vuex';
+import ProductCard from '@/components/productCard.vue';
+import { catalogData } from '@/components/productInfo.vue';
 
 export default {
+    components: {
+        ProductCard
+    },
     data() {
         return {
             localQuantity: 1,
@@ -230,6 +285,18 @@ export default {
         },
         isInWishlist() {
             return this.wishlist.some(item => item.id === this.productData.id);
+        },
+        similarProducts() {
+            
+            const sameTypeProducts = catalogData.filter(product => 
+                product.type === this.productData.type && 
+                product.id !== this.productData.id
+            );
+            
+            const shuffled = [...sameTypeProducts].sort(() => 0.5 - Math.random());
+            const result = shuffled.slice(0, 8);
+
+            return result;
         }
     },
     created() {
@@ -305,6 +372,12 @@ export default {
         },
         setActiveTab(tab) {
             this.activeTab = tab;
+        },
+        updateWishlist({ id }) {
+            const product = catalogData.find(product => product.id === id);
+            if (product) {
+                this.$store.dispatch('toggleWishlist', product);
+            }
         }
     }
 }

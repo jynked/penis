@@ -142,28 +142,27 @@
                         ←
                     </button>
 
-                    <template v-if="totalPages <= 3">
-                        <button v-for="page in totalPages" :key="page"
-                            :class="['page-number', { active: page === currentPage }]" @click="goToPage(page)">
-                            {{ page }}
-                        </button>
-                    </template>
+                    <button :class="['page-number', { active: 1 === currentPage }]" 
+                            @click="goToPage(1)">
+                        1
+                    </button>
 
-                    <template v-else>
-                        <button :class="['page-number', { active: currentPage === 1 }]" @click="goToPage(1)">
-                            1
-                        </button>
-                        <span v-if="currentPage > 2">...</span>
-                        <button v-for="page in middlePages" :key="page"
-                            :class="['page-number', { active: page === currentPage }]" @click="goToPage(page)">
-                            {{ page }}
-                        </button>
-                        <span v-if="currentPage < totalPages - 1">...</span>
-                        <button :class="['page-number', { active: currentPage === totalPages }]"
+                    <span v-if="showStartDots">...</span>
+
+                    <button v-for="page in middlePages" 
+                            :key="page"
+                            :class="['page-number', { active: page === currentPage }]" 
+                            @click="goToPage(page)">
+                        {{ page }}
+                    </button>
+
+                    <span v-if="showEndDots">...</span>
+
+                    <button v-if="totalPages > 1"
+                            :class="['page-number', { active: totalPages === currentPage }]"
                             @click="goToPage(totalPages)">
-                            {{ totalPages }}
-                        </button>
-                    </template>
+                        {{ totalPages }}
+                    </button>
 
                     <button class="arrow" @click="nextPage" :disabled="currentPage === totalPages">
                         →
@@ -327,9 +326,34 @@ export default {
             return Math.ceil(this.filteredProducts.length / this.itemsPerPage);
         },
         middlePages() {
-            if (this.currentPage <= 2) return [2];
-            if (this.currentPage >= this.totalPages - 1) return [this.totalPages - 1];
-            return [this.currentPage];
+            let pages = [];
+            
+            if (this.totalPages <= 5) {
+                // Если всего 5 или меньше страниц, показываем их все
+                for (let i = 2; i < this.totalPages; i++) {
+                    pages.push(i);
+                }
+                return pages;
+            }
+
+            if (this.currentPage <= 3) {
+                // Если текущая страница близко к началу
+                return [2, 3, 4];
+            }
+
+            if (this.currentPage >= this.totalPages - 2) {
+                // Если текущая страница близко к концу
+                return [this.totalPages - 3, this.totalPages - 2, this.totalPages - 1];
+            }
+
+            // В остальных случаях показываем текущую страницу и по одной странице с каждой стороны
+            return [this.currentPage - 1, this.currentPage, this.currentPage + 1];
+        },
+        showStartDots() {
+            return this.currentPage > 3 && this.totalPages > 4;
+        },
+        showEndDots() {
+            return this.currentPage < this.totalPages - 2 && this.totalPages > 4;
         }
     },
     methods: {
@@ -404,7 +428,7 @@ export default {
             this.attributes.forEach(attr => attr.model = false);
         },
         handlePriceInput() {
-            // Преобразуем значения в числа
+            // Преоразуем значения в числа
             let min = Number(this.minPrice);
             let max = Number(this.maxPrice);
 

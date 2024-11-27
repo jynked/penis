@@ -102,6 +102,7 @@ export default createStore({
             
             const productWithFullData = {
                 ...product,
+                type: fullProductData.type,
                 deliveryCities: fullProductData.deliveryCities || [],
                 weight: fullProductData.weight || []
             };

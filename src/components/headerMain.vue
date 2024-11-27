@@ -48,8 +48,21 @@
                     </div>
                 </div>
                 <div class="search">
-                    <input type="text" name="search" id="search" placeholder="Ищите...">
+                    <input 
+                        type="text" 
+                        name="search" 
+                        id="search" 
+                        placeholder="Ищите..."
+                        v-model="searchQuery"
+                        @focus="showResults = true"
+                    >
                     <button><img src="../assets/img/loop.png" alt=""></button>
+                    
+                    <SearchResults 
+                        :searchQuery="searchQuery"
+                        :isVisible="showResults"
+                        @close-search="showResults = false"
+                    />
                 </div>
                 <div class="user-logs">
                     <button class="log" @click="openLoginPopup">
@@ -185,17 +198,21 @@
 import { ref, computed, onMounted, onBeforeUnmount } from 'vue';
 import QuickView from './quickView.vue';
 import { mapState, mapActions, mapGetters } from 'vuex';
+import SearchResults from '@/components/SearchResults.vue';
 
 export default {
     components: {
-        QuickView
+        QuickView,
+        SearchResults
     },
     setup() {
         const isDropdownOpen = ref(false);
         const citySearch = ref('');
         const choosed = ref("Выберите город");
-        const isFixed = ref(false); // состояние для фиксированного заголовка
-        const headerTopHeight = ref(0); // высота header-top
+        const isFixed = ref(false);
+        const headerTopHeight = ref(0);
+        const searchQuery = ref('');
+        const showResults = ref(false);
 
         const cities = [
             { name: "Пермь", code: 'PERM' },
@@ -227,6 +244,13 @@ export default {
             isDropdownOpen.value = false;
         };
 
+        const handleClickOutside = (event) => {
+            const searchContainer = document.querySelector('.search');
+            if (searchContainer && !searchContainer.contains(event.target)) {
+                showResults.value = false;
+            }
+        };
+
         const handleScroll = () => {
             if (window.scrollY > headerTopHeight.value) {
                 isFixed.value = true;
@@ -235,15 +259,15 @@ export default {
             }
         };
 
-        // Получаем высоту header-top после монтирования компонента
         onMounted(() => {
             headerTopHeight.value = document.querySelector('.header-top').offsetHeight;
             window.addEventListener('scroll', handleScroll);
+            document.addEventListener('click', handleClickOutside);
         });
 
-        // Удаляем обработчик события перед размонтированием
         onBeforeUnmount(() => {
             window.removeEventListener('scroll', handleScroll);
+            document.removeEventListener('click', handleClickOutside);
         });
 
         return {
@@ -254,7 +278,9 @@ export default {
             choosed,
             isDropdownOpen,
             continueWithoutCity,
-            isFixed
+            isFixed,
+            searchQuery,
+            showResults
         };
     },
     data() {
@@ -342,3 +368,18 @@ export default {
     }
 }
 </script>
+
+<style lang="scss">
+.search {
+    position: relative;
+    // ... существующие стили ...
+
+    .search-results {
+        position: absolute;
+        top: calc(100% + 5px);
+        left: 0;
+        right: 0;
+        z-index: 1000;
+    }
+}
+</style>

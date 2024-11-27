@@ -377,7 +377,6 @@ header {
     }
 
     button {
-        cursor: pointer;
         padding: 13px;
         background: #FFF;
         border: 0px;
@@ -385,6 +384,7 @@ header {
         border-bottom-right-radius: 30px;
 
         img {
+            
             width: 20px;
             height: auto;
             transform: rotate(-90deg);
@@ -427,6 +427,7 @@ header {
             font-weight: bold;
         }
     }
+
     .total {
         display: flex;
         flex-direction: row;
@@ -1190,7 +1191,7 @@ header {
         width: fit-content;
         height: fit-content;
         margin-bottom: 20px;
-
+        cursor: pointer;
         img {
             width: 100%;
             height: auto;
@@ -3223,9 +3224,10 @@ header {
                 }
 
                 button:hover {
-                    color: #555;
+                    color: #CCC;
                     transition: ease .2s;
                 }
+
                 button.active {
                     color: #000;
                     transition: ease .2s;
@@ -3277,14 +3279,16 @@ header {
 
             .deliver {
                 width: 100%;
-                padding: 10px 0px 10px 0px;
+                padding: 20px 0px 20px 0px;
                 border-bottom: 1px solid #AAA;
                 font-weight: bold;
                 color: #888;
+
                 p {
                     margin: 0;
                 }
             }
+
             .additional {
                 display: flex;
                 flex-direction: column;
@@ -3295,13 +3299,15 @@ header {
                     flex-direction: row;
                     align-items: center;
                     gap: 20px;
+
                     .parameter {
                         margin-bottom: 2px;
-                        width: 25%;
-                        padding: 20px;
+                        width: 50%;
+                        padding: 20px 0px 20px 0px;
                         border-right: 1px solid #AAA;
                         border-bottom: 1px solid #AAA;
                     }
+
                     p {
                         margin: 0;
                         color: #888;
@@ -3309,24 +3315,28 @@ header {
                     }
                 }
             }
+
             .reviews {
                 display: flex;
                 flex-direction: row;
                 width: 100%;
-                padding-top: 20px;
+                padding: 20px 0px 20px 0px;
                 gap: 20px;
+
                 .left {
                     width: 50%;
                     display: flex;
                     flex-direction: column;
                     gap: 20px;
-                    > p {
+
+                    >p {
                         font-size: 14px;
                         font-weight: bold;
                         color: #888;
                         border-bottom: 1px solid #AAA;
-                        padding-bottom: 5px;
+                        padding-bottom: 22px;
                     }
+
                     .review {
                         display: flex;
                         flex-direction: row;
@@ -3334,33 +3344,41 @@ header {
                         gap: 20px;
                         padding-bottom: 20px;
                         border-bottom: 1px solid #AAA;
-                        > img {
+
+                        >img {
                             width: 100px;
                             height: auto;
                         }
+
                         .text {
                             display: flex;
                             flex-direction: column;
+
                             .name {
                                 display: flex;
                                 flex-direction: row;
                                 align-items: center;
                                 justify-content: space-between;
+
                                 img {
                                     margin-left: 3px;
                                     width: 15px;
                                     height: auto;
                                 }
+
                                 p {
                                     font-size: 20px;
                                 }
                             }
+
                             .date {
                                 color: #888;
                             }
+
                             .message {
                                 margin-top: 20px;
                             }
+
                             p {
                                 font-weight: bold;
                                 margin: 0;
@@ -3368,11 +3386,107 @@ header {
                         }
                     }
                 }
+
                 .right {
                     width: 50%;
+
                     p {
                         margin: 0;
                         font-weight: bold;
+                    }
+                }
+            }
+
+            .about {
+                width: 100%;
+                padding: 20px 0px 20px 0px;
+                display: flex;
+                flex-direction: column;
+                gap: 10px;
+
+                >p {
+                    font-size: 24px;
+                    font-weight: bold;
+                }
+
+                p {
+                    margin: 0;
+                }
+
+                .info {
+                    display: flex;
+                    flex-direction: column;
+                    gap: 10px;
+                    font-weight: bold;
+                    color: #888;
+
+                    span {
+                        color: #000;
+                    }
+                }
+            }
+
+            .other {
+                .catalog {
+                    padding-top: 20px;
+                    display: flex;
+                    flex-direction: row;
+                    flex-wrap: wrap;
+                    justify-content: center;
+                    gap: 20px;
+        
+                    .product-card {
+                        width: 23%;
+                        margin: 5px;
+        
+                        &:hover {
+                            width: 23.7%;
+                            margin: 0px;
+                            transition: ease-in-out .2s;
+                        }
+                    }
+                }
+            }
+
+            .send {
+                width: 100%;
+                display: flex;
+                flex-direction: column;
+                gap: 10px;
+                padding: 20px 0px 20px 0px;
+                >p {
+                    font-size: 24px;
+                    font-weight: bold;
+                }
+                .text {
+                    display: flex;
+                    flex-direction: column;
+                    gap: 10px;
+                    .info {
+                        display: flex;
+                        flex-direction: row;
+                        gap: 10px;
+                        input {
+                            padding: 10px;
+                            width: 50%;
+                            border: 1px solid #AAA;
+                        }
+                    }
+                    .message {
+                        textarea {
+                            border: 1px solid #AAA;
+                            padding: 10px;
+                            width: 49.6%;
+                            min-height: 100px;
+                            max-height: 250px;
+                        }
+                    }
+                    button {
+                        width: fit-content;
+                        background: #ff0000;
+                        border: 0px;
+                        color: #FFF;
+                        padding: 10px 20px 10px 20px;
                     }
                 }
             }
