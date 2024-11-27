@@ -1179,6 +1179,7 @@ header {
         top: 10px;
         background: none;
         border: 0px;
+        z-index: 100;
 
         img {
             width: 20px;
@@ -1192,6 +1193,7 @@ header {
         height: fit-content;
         margin-bottom: 20px;
         cursor: pointer;
+        z-index: 10;
         img {
             width: 100%;
             height: auto;
@@ -1290,6 +1292,7 @@ header {
         transition: ease .4s;
         border: 0px;
         border-radius: 5px;
+        z-index: 100;
     }
 
     .view-button:hover {
@@ -2891,12 +2894,12 @@ header {
 
     .container {
         max-width: 1440px;
-        padding: 20px;
 
         .links {
             display: flex;
             flex-direction: row;
             gap: 5px;
+            padding-top: 20px;
 
             .home-link {
                 text-decoration: none;
