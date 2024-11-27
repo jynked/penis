@@ -115,7 +115,7 @@ export default {
     top: 100%;
     width: 650px;
     background: white;
-    border-radius: 0 0 8px 8px;
+    border-radius: 20px;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
     z-index: 1000;
 
@@ -130,7 +130,7 @@ export default {
     }
 
     .results-container {
-        max-height: 500px;
+        max-height: 350px;
         overflow-y: auto;
         padding: 15px;
         display: flex;
@@ -139,14 +139,16 @@ export default {
         justify-content: flex-start;
 
         .product-card {
-            width: 230px;
+            width: 100%;
             border: 1px solid #eee;
             border-radius: 8px;
             padding: 10px;
             cursor: pointer;
             transition: all 0.3s ease;
-            background: white;
             text-align: left;
+            display: flex;
+            flex-direction: row;
+            gap: 50px;
 
             &:hover {
                 transform: translateY(-2px);
@@ -154,10 +156,9 @@ export default {
             }
 
             img {
-                width: 100%;
+                width: 30%;
                 object-fit: contain;
                 transform: matrix(1, 0, 0, 1, 0, 0);
-                padding: 20px;
             }
 
             .product-info {

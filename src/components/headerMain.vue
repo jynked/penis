@@ -48,21 +48,12 @@
                     </div>
                 </div>
                 <div class="search">
-                    <input 
-                        type="text" 
-                        name="search" 
-                        id="search" 
-                        placeholder="Ищите..."
-                        v-model="searchQuery"
-                        @focus="showResults = true"
-                    >
+                    <input type="text" name="search" id="search" placeholder="Ищите..." v-model="searchQuery"
+                        @focus="handleSearchFocus">
                     <button><img src="../assets/img/loop.png" alt=""></button>
-                    
-                    <SearchResults 
-                        :searchQuery="searchQuery"
-                        :isVisible="showResults"
-                        @close-search="showResults = false"
-                    />
+
+                    <SearchResults :searchQuery="searchQuery" :isVisible="showResults"
+                        @close-search="showResults = false" />
                 </div>
                 <div class="user-logs">
                     <button class="log" @click="openLoginPopup">
@@ -84,8 +75,12 @@
                 </div>
             </div>
             <div class="search mobile">
-                <input type="text" name="search" id="search" placeholder="Ищите...">
+                <input type="text" name="search" id="search-mobile" placeholder="Ищите..." v-model="searchQuery"
+                    @focus="handleSearchFocus">
                 <button><img src="../assets/img/loop.png" alt=""></button>
+
+                <SearchResults :searchQuery="searchQuery" :isVisible="showResults"
+                    @close-search="showResults = false" />
             </div>
             <div class="container mobile">
                 <button @click="openMenuPopup">
@@ -99,6 +94,16 @@
                 </button>
             </div>
         </div>
+        <CartMobile 
+            v-if="showCartPopup && isMobile" 
+            :isCartOpen="showCartPopup"
+            @close-cart="showCartPopup = false"
+        />
+        
+        <QuickView v-if="showCartPopup && !isMobile" 
+                  :view-type="'cart'" 
+                  data-view-type="cart"
+                  @close-popup="showCartPopup = false" />
     </header>
     <div class="container-menu" :class="{ active: showMenuPopup }">
         <div class="content-menu">
@@ -106,7 +111,7 @@
                 <img src="../assets/img/close.png" alt="">
             </button>
             <div class="content">
-                <router-link :to="{ name: 'main' }"><img src="../assets/img/logo.png" alt=""></router-link>
+                <router-link :to="{ name: 'main' }"  @click="openMenuPopup"><img src="../assets/img/logo.png" alt=""></router-link>
                 <div class="options">
                     <select>
                         <option value="RUB">RUB</option>
@@ -197,13 +202,15 @@
 <script>
 import { ref, computed, onMounted, onBeforeUnmount } from 'vue';
 import QuickView from './quickView.vue';
-import { mapState, mapActions, mapGetters } from 'vuex';
+import { mapGetters } from 'vuex';
 import SearchResults from '@/components/SearchResults.vue';
+import CartMobile from './CartMobile.vue';
 
 export default {
     components: {
         QuickView,
-        SearchResults
+        SearchResults,
+        CartMobile
     },
     setup() {
         const isDropdownOpen = ref(false);
@@ -245,10 +252,18 @@ export default {
         };
 
         const handleClickOutside = (event) => {
-            const searchContainer = document.querySelector('.search');
-            if (searchContainer && !searchContainer.contains(event.target)) {
+            const searchContainers = document.querySelectorAll('.search');
+            const isClickInside = Array.from(searchContainers).some(container => 
+                container && container.contains(event.target)
+            );
+            
+            if (!isClickInside) {
                 showResults.value = false;
             }
+        };
+
+        const handleSearchFocus = () => {
+            showResults.value = true;
         };
 
         const handleScroll = () => {
@@ -280,7 +295,8 @@ export default {
             continueWithoutCity,
             isFixed,
             searchQuery,
-            showResults
+            showResults,
+            handleSearchFocus
         };
     },
     data() {
@@ -289,11 +305,11 @@ export default {
             showLoginPopup: false,
             showFavouritesPopup: false,
             showMenuPopup: false,
-            showCartPopup: false
+            showCartPopup: false,
+            isMobile: false
         }
     },
     computed: {
-        ...mapState('localization', ['currentLanguage', 'currentCurrency']),
         ...mapGetters('localization', ['convertPrice', 'currencySymbol']),
         ...mapGetters(['cartTotal']),
         formattedCartTotal() {
@@ -301,12 +317,14 @@ export default {
         }
     },
     methods: {
-        ...mapActions('localization', ['setLanguage', 'setCurrency']),
         openCartPopup() {
             this.showCartPopup = true;
             this.showFavouritesPopup = false;
             this.showLoginPopup = false;
             this.showMenuPopup = false;
+            if (this.isMobile) {
+                document.body.style.overflow = 'hidden';
+            }
         },
         openFavouritesPopup() {
             this.showFavouritesPopup = true;
@@ -339,32 +357,17 @@ export default {
                 this.isDropdownOpen = false;
             }
         },
-        async changeLanguage(event) {
-            const language = event.target.value;
-            await this.setLanguage(language);
-            this.$i18n.locale = language;
-        },
-        async changeCurrency(event) {
-            const currency = event.target.value;
-            await this.setCurrency(currency);
+        checkMobile() {
+            this.isMobile = window.innerWidth <= 768;
         }
     },
-    created() {
-        // Загружаем сохраненные настройки при создании компонента
-        const savedLanguage = localStorage.getItem('language');
-        const savedCurrency = localStorage.getItem('currency');
-        
-        if (savedLanguage) {
-            this.selectedLanguage = savedLanguage;
-            this.$i18n.locale = savedLanguage;
-        }
-        
-        if (savedCurrency) {
-            this.selectedCurrency = savedCurrency;
-        }
+    mounted() {
+        this.checkMobile();
+        window.addEventListener('resize', this.checkMobile);
     },
     beforeUnmount() {
         document.body.style.overflow = '';
+        window.removeEventListener('resize', this.checkMobile);
     }
 }
 </script>
@@ -372,13 +375,9 @@ export default {
 <style lang="scss">
 .search {
     position: relative;
-    // ... существующие стили ...
-
     .search-results {
         position: absolute;
         top: calc(100% + 5px);
-        left: 0;
-        right: 0;
         z-index: 1000;
     }
 }
